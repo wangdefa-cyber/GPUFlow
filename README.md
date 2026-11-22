@@ -2,7 +2,7 @@
 
 GPUFlow 基于阿里巴巴公开 `cluster-trace-gpu-v2020` GPU 集群追踪数据，目标是在后续阶段实现真实数据导入、虚拟 GPU 集群管理、任务调度、离散事件仿真、动态可视化、策略评价和 AI 辅助决策。
 
-当前进度：**阶段 0、1、2 已完成，等待确认后进入阶段 3（可操作原型）。**
+当前进度：**阶段 0–3 已完成，等待确认后进入阶段 4（最小可运行闭环）。**
 
 ## 阶段 0：环境与项目审计
 
@@ -32,6 +32,22 @@ GPUFlow 基于阿里巴巴公开 `cluster-trace-gpu-v2020` GPU 集群追踪数�
 - `docs/adr/`：关键架构决策记录
 - `docs/stage2_acceptance_report.md`：阶段验收、未完成项和风险
 
+## 阶段 3：可操作 Web 原型
+
+- `streamlit_app.py`：九页面 Streamlit 原型入口
+- `docs/stage3_prototype_design.md`：信息架构、页面设计和交互规范
+- `docs/stage3_acceptance_report.md`：原型验收结果和阶段 4 顺序
+- `.streamlit/config.toml`：深色科技风主题
+- `src/gpu_sim/prototype/`：原型规则、会话状态和真实数据只读访问
+- `app_pages/`：总览、数据中心、资源、任务、调度、仿真、对比、AI、设置
+- `tests/`：原型逻辑和九页面渲染测试
+
+启动原型：
+
+```powershell
+conda activate gpu_analysis
+streamlit run streamlit_app.py
+```
 ## 环境
 
 ```powershell
@@ -53,7 +69,7 @@ conda run -n gpu_analysis python scripts\audit_quality.py
 
 ## 当前边界
 
-- 尚未实现数据库、调度算法、仿真引擎或 Web 页面。
+- Web 原型已实现；SQLite 持久化、调度算法和离散事件仿真引擎仍待阶段 4。
 - 历史数据中的缺失值、状态差异、部分采样和指标口径已记录，不得无提示删除或伪造。
 - 真实历史数据、系统配置数据和仿真生成数据必须保持可区分。
 - 原始 CSV/TAR 不纳入 Git。
