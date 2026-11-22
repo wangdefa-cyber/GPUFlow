@@ -13,7 +13,8 @@ SRC_DIR = PROJECT_ROOT / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
-from gpu_sim.prototype.state import initialize_state  # noqa: E402
+from gpu_sim.db import get_database  # noqa: E402
+from gpu_sim.services import initialize_database  # noqa: E402
 
 
 st.set_page_config(
@@ -23,7 +24,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-initialize_state()
+initialize_database(get_database())
 
 st.logo(str(PROJECT_ROOT / "assets" / "logo.svg"))
 
@@ -45,7 +46,7 @@ page = st.navigation(
                 "app_pages/data_center.py",
                 title="数据中心",
                 icon=":material/database:",
-                help="查看七张真实历史表的审计结果、质量风险和有限行数预览。",
+                help="查看七张真实历史表的审计结果，并导入真实历史工作负载样本到 SQLite。",
             ),
         ],
         "资源配置": [
@@ -73,7 +74,7 @@ page = st.navigation(
                 "app_pages/simulation.py",
                 title="动态仿真",
                 icon=":material/play_arrow:",
-                help="检查阶段 4 仿真所需的输入完整性；本阶段不生成伪造的运行结果。",
+                help="运行确定性离散事件仿真，查看动态资源时间线、任务甘特图、调度事件和评价指标。",
             ),
             st.Page(
                 "app_pages/comparison.py",

@@ -2,7 +2,7 @@
 
 GPUFlow 基于阿里巴巴公开 `cluster-trace-gpu-v2020` GPU 集群追踪数据，目标是在后续阶段实现真实数据导入、虚拟 GPU 集群管理、任务调度、离散事件仿真、动态可视化、策略评价和 AI 辅助决策。
 
-当前进度：**阶段 0–3 已完成，等待确认后进入阶段 4（最小可运行闭环）。**
+当前进度：**阶段 0–4 已完成，等待确认后进入阶段 5（算法与仿真完善）。**
 
 ## 阶段 0：环境与项目审计
 
@@ -48,6 +48,23 @@ GPUFlow 基于阿里巴巴公开 `cluster-trace-gpu-v2020` GPU 集群追踪数�
 conda activate gpu_analysis
 streamlit run streamlit_app.py
 ```
+## 阶段 4：最小可运行闭环
+
+- `docs/stage4_closed_loop.md`：闭环实现、调度引擎、指标和验证说明
+- `docs/stage4_acceptance_report.md`：阶段验收和遗留项
+- `src/gpu_sim/`：SQLite、导入、调度、离散事件引擎和评价服务
+- `artifacts/gpuflow.db`：本地 SQLite 数据库，不提交 Git
+- `scripts/smoke_stage4.py`：真实历史样本与用户任务闭环冒烟测试
+
+已实现：
+
+- 真实历史 instance + task + job 样本导入
+- 虚拟 GPU 服务器与用户任务持久化
+- FIFO、SJF、Priority、First Fit、Best Fit
+- GPU/CPU/内存/型号多资源约束
+- 确定性离散事件仿真
+- 事件、任务结果、指标与资源采样持久化
+- 动态时间线、甘特图和实验回看
 ## 环境
 
 ```powershell
@@ -69,7 +86,7 @@ conda run -n gpu_analysis python scripts\audit_quality.py
 
 ## 当前边界
 
-- Web 原型已实现；SQLite 持久化、调度算法和离散事件仿真引擎仍待阶段 4。
+- Web 原型、SQLite、调度算法和最小离散事件闭环已实现；策略批量对比和 AI 规则仍待后续阶段。
 - 历史数据中的缺失值、状态差异、部分采样和指标口径已记录，不得无提示删除或伪造。
 - 真实历史数据、系统配置数据和仿真生成数据必须保持可区分。
 - 原始 CSV/TAR 不纳入 Git。

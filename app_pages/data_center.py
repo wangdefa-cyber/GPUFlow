@@ -2,16 +2,19 @@ from __future__ import annotations
 
 import streamlit as st
 
+from gpu_sim.db import get_database
+from gpu_sim.importer import import_historical_workload_sample
 from gpu_sim.prototype import data_access
 from gpu_sim.prototype.ui import page_caption, source_badge
+from gpu_sim.services import database_counts, latest_historical_dataset
 
 
 page_caption(
-    "数据中心展示真实 CSV 的审计结果与有限行数预览。完整导入、分页查询和数据库索引将在阶段 4 实现。"
+    "数据中心展示真实 CSV 的审计结果、有限行数预览，以及阶段 4 的 SQLite 历史工作负载导入。"
 )
 source_badge("HISTORICAL")
 
-tabs = st.tabs(["数据概况", "质量检查", "真实样例"])
+tabs = st.tabs(["数据概况", "质量检查", "真实样例", "数据库导入"])
 
 with tabs[0]:
     profiles = data_access.table_profiles()
@@ -89,3 +92,50 @@ with tabs[2]:
         st.dataframe(shown, hide_index=True, width="stretch", alt="真实历史任务 CSV 前若干行预览")
 
     st.caption("以上为真实 CSV 的有限行数预览，不是全量分页查询；时间字段为脱敏相对秒数。")
+with tabs[3]:
+    database = get_database()
+    with database.session_scope() as session:
+        counts = database_counts(session)
+        latest = latest_historical_dataset(session)
+        latest_label = latest.version_code if latest else "尚未导入"
+
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("SQLite 用户任务", counts["user_tasks"], border=True)
+    with col2:
+        st.metric("历史回放任务", counts["historical_tasks"], border=True)
+    with col3:
+        st.metric("仿真实验", counts["runs"], border=True)
+
+    st.caption(f"数据库：{database.path} · 最新历史样本：{latest_label}")
+    st.write(
+        "导入会从真实 instance 表中读取前若干条已终止且时长大于 0 的实例，"
+        "按 job_name + task_name 关联 task 资源计划，并转换为单机仿真任务。"
+    )
+    st.warning(
+        "这是有界历史样本，不是全量实例回放。历史 task 没有优先级，样本统一使用中性优先级 5，并在数据集元数据中记录该假设。",
+        icon=":material/info:",
+    )
+    task_limit = st.select_slider(
+        "历史样本任务数量",
+        options=[20, 50, 80, 120, 200],
+        value=80,
+        key="history_import_limit",
+    )
+    if st.button("导入真实历史工作负载样本", icon=":material/cloud_download:", width="stretch"):
+        with st.status("导入真实历史工作负载样本", expanded=True) as status:
+            try:
+                dataset_id, task_count = import_historical_workload_sample(
+                    database,
+                    task_limit=task_limit,
+                    progress=lambda message: status.write(message),
+                )
+                status.update(
+                    label=f"导入完成：{task_count} 个历史任务",
+                    state="complete",
+                    expanded=False,
+                )
+                st.success(f"数据集 {dataset_id} 已写入 SQLite。", icon=":material/check_circle:")
+            except Exception as exc:
+                status.update(label="导入失败", state="error", expanded=True)
+                st.error(str(exc), icon=":material/error:")

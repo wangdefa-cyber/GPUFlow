@@ -3,9 +3,10 @@ from __future__ import annotations
 import pandas as pd
 import streamlit as st
 
+from gpu_sim.db import get_database
 from gpu_sim.prototype.logic import PRESETS
-from gpu_sim.prototype.state import get_scheduler, get_servers, get_tasks
 from gpu_sim.prototype.ui import page_caption, section_header, source_badge
+from gpu_sim.services import scheduler_dicts, server_dicts, user_task_dicts
 
 
 page_caption(
@@ -13,9 +14,11 @@ page_caption(
 )
 source_badge("PROTOTYPE")
 
-servers = get_servers()
-tasks = get_tasks()
-scheduler = get_scheduler()
+with get_database().session_scope() as session:
+    servers = server_dicts(session)
+    tasks = user_task_dicts(session)
+    scheduler_configs = scheduler_dicts(session)
+scheduler = next((row for row in scheduler_configs if row["is_default"]), scheduler_configs[0])
 
 col1, col2, col3 = st.columns(3)
 with col1:

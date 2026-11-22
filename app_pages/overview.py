@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import streamlit as st
 
+from gpu_sim.db import get_database
 from gpu_sim.prototype import data_access
 from gpu_sim.prototype.ui import format_int, page_caption, section_header, source_badge
+from gpu_sim.services import database_counts
 
 
 page_caption(
@@ -22,6 +24,15 @@ with col3:
 with col4:
     st.metric("机器规格", format_int(summary["machine_count"]), "台", border=True)
 
+with get_database().session_scope() as session:
+    runtime_counts = database_counts(session)
+with st.container(border=True):
+    st.markdown("**SQLite 运行状态**")
+    st.write(
+        f"服务器 {runtime_counts['servers']} 台 · 用户任务 {runtime_counts['user_tasks']} 条 · "
+        f"历史回放任务 {runtime_counts['historical_tasks']} 条 · 仿真实验 {runtime_counts['runs']} 次"
+    )
+    st.caption("系统配置和实验结果已持久化；原始历史 CSV 仍保持只读。")
 section_header(
     "历史集群画像",
     "容量与状态来自已校验的七张官方表；图表展示真实历史聚合，不是仿真结果。",
@@ -72,13 +83,13 @@ with capabilities[0]:
 with capabilities[1]:
     with st.container(border=True):
         st.markdown("**:material/tune: 调度设计**")
-        st.badge("设计完成", color="blue")
-        st.write("排序规则与放置规则分离，四种策略预设已明确。")
+        st.badge("已实现", color="green")
+        st.write("四种预设、排序规则、放置规则和多资源约束已进入可执行闭环。")
 with capabilities[2]:
     with st.container(border=True):
         st.markdown("**:material/play_arrow: 仿真引擎**")
-        st.badge("阶段 4", color="orange")
-        st.write("将实现离散事件推进、资源分配和确定性回放。")
+        st.badge("已完成", color="green")
+        st.write("离散事件推进、资源分配、动态回放和指标计算已可运行。")
 with capabilities[3]:
     with st.container(border=True):
         st.markdown("**:material/smart_toy: AI 建议**")

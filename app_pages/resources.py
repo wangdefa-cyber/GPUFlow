@@ -3,23 +3,22 @@ from __future__ import annotations
 import pandas as pd
 import streamlit as st
 
+from gpu_sim.db import get_database
 from gpu_sim.prototype.logic import GPU_TYPES, SERVER_STATUSES, capacity_summary, validate_servers
-from gpu_sim.prototype.state import (
-    editor_version,
-    get_servers,
-    reset_state,
-    save_servers,
-    servers_frame,
-)
+from gpu_sim.services import replace_servers, reset_servers_to_defaults, server_dicts
 from gpu_sim.prototype.ui import page_caption, section_header, source_badge
 
 
 page_caption(
-    "维护用户自定义的虚拟 GPU 服务器。这里的容量是系统配置数据，与历史 machine_spec 分开保存。"
+    "维护 SQLite 中用户自定义的虚拟 GPU 服务器。历史 machine_spec 只作为参考，不会被修改。"
 )
 source_badge("CONFIG")
 
-servers = get_servers()
+database = get_database()
+st.session_state.setdefault("server_editor_version", 1)
+with database.session_scope() as session:
+    servers = server_dicts(session)
+
 summary = capacity_summary(servers)
 col1, col2, col3, col4 = st.columns(4)
 with col1:
@@ -33,25 +32,20 @@ with col4:
 
 section_header(
     "服务器配置",
-    "支持新增、编辑和删除行；保存前会校验名称、型号、状态和容量。",
+    "支持新增、编辑和删除行；保存后写入 SQLite，已有实验保留冻结快照。",
     icon=":material/dns:",
 )
 
-df = servers_frame()
+df = pd.DataFrame(servers)
 edited = st.data_editor(
     df,
-    key=f"servers_editor_{editor_version()}",
+    key=f"servers_editor_{st.session_state.server_editor_version}",
     hide_index=True,
     width="stretch",
     num_rows="dynamic",
     column_order=[
-        "id",
-        "name",
-        "gpu_type",
-        "gpu_capacity",
-        "cpu_capacity",
-        "memory_capacity_gb",
-        "status",
+        "id", "name", "gpu_type", "gpu_capacity", "cpu_capacity",
+        "memory_capacity_gb", "status",
     ],
     disabled=["id"],
     column_config={
@@ -77,19 +71,26 @@ with button_col1:
                 for error in errors:
                     st.write(f"- {error}")
         else:
-            save_servers(records)
-            st.success("服务器配置已保存到当前会话。", icon=":material/check_circle:")
+            with database.session_scope() as session:
+                replace_servers(session, records)
+            st.session_state.server_editor_version += 1
+            st.toast("服务器配置已写入 SQLite。", icon=":material/check_circle:")
+            st.rerun()
 with button_col2:
     if st.button("恢复示范配置", icon=":material/restart_alt:", width="stretch", key="reset_servers"):
-        reset_state()
+        with database.session_scope() as session:
+            reset_servers_to_defaults(session)
+        st.session_state.server_editor_version += 1
+        st.toast("服务器配置已恢复为示范数据。", icon=":material/restart_alt:")
         st.rerun()
 
-view_rows = edited.to_dict("records")
-view = pd.DataFrame(view_rows)
+view = edited.copy()
 if not view.empty:
     view["gpu_capacity"] = pd.to_numeric(view["gpu_capacity"], errors="coerce").fillna(0)
     by_type = (
-        view.groupby("gpu_type", as_index=False)["gpu_capacity"].sum().sort_values("gpu_capacity", ascending=False)
+        view.groupby("gpu_type", as_index=False)["gpu_capacity"]
+        .sum()
+        .sort_values("gpu_capacity", ascending=False)
     )
     with st.container(border=True):
         st.markdown("**按 GPU 型号汇总容量**")
@@ -99,10 +100,8 @@ if not view.empty:
             y="gpu_capacity",
             x_label="GPU 型号",
             y_label="配置容量（GPU 当量）",
-            alt="当前原型虚拟 GPU 集群按型号汇总的配置容量",
+            alt="当前 SQLite 虚拟 GPU 集群按型号汇总的配置容量",
         )
-        st.caption("来源：系统配置数据（当前浏览器会话）。")
+        st.caption("来源：系统配置数据（SQLite）。")
 
-st.caption(
-    "首个可运行闭环将在阶段 4 把这些配置持久化到 SQLite，并在运行时维护已分配和剩余资源。"
-)
+st.caption("资源分配约束将在每次仿真运行中由引擎实时校验，超出容量的任务会保持等待或受阻状态。")

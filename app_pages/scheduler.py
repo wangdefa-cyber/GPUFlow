@@ -3,20 +3,32 @@ from __future__ import annotations
 import pandas as pd
 import streamlit as st
 
+from gpu_sim.db import get_database
 from gpu_sim.prototype.logic import PRESETS, order_tasks, preflight_tasks
-from gpu_sim.prototype.state import get_scheduler, get_servers, get_tasks, save_scheduler
 from gpu_sim.prototype.ui import page_caption, section_header, source_badge
+from gpu_sim.services import scheduler_dicts, server_dicts, set_default_scheduler, user_task_dicts
 
 
-page_caption(
-    "配置任务排序与服务器放置规则。本页显示确定性排序预览和静态容量预检，不执行动态资源分配。"
-)
+page_caption("配置 SQLite 中的默认排序与放置规则，并查看确定性排序预览和静态容量预检。")
 source_badge("CONFIG")
 
-scheduler = get_scheduler()
-preset_names = list(PRESETS)
-current_index = preset_names.index(scheduler.get("preset", "FIFO")) if scheduler.get("preset") in PRESETS else 0
-preset = st.radio("调度策略预设", preset_names, index=current_index, horizontal=True, key="scheduler_preset")
+database = get_database()
+with database.session_scope() as session:
+    configs = scheduler_dicts(session)
+    servers = server_dicts(session)
+    tasks = user_task_dicts(session)
+
+config_by_preset = {row["preset"]: row for row in configs}
+preset_names = [name for name in ["FIFO", "SJF", "Priority", "Best Fit"] if name in config_by_preset]
+current = next((row for row in configs if row["is_default"]), configs[0])
+current_preset = current.get("preset", "FIFO") if current else "FIFO"
+preset = st.radio(
+    "调度策略预设",
+    preset_names,
+    index=preset_names.index(current_preset) if current_preset in preset_names else 0,
+    horizontal=True,
+    key="scheduler_preset",
+)
 
 config = PRESETS[preset]
 left, right = st.columns([1, 1])
@@ -29,12 +41,13 @@ with right:
     st.metric("任务排序", config["order_rule"], border=True)
     st.metric("资源放置", config["placement_rule"], border=True)
 
+selected_record = config_by_preset[preset]
 with st.form("scheduler_config_form"):
     wait_sla = st.number_input(
         "等待 SLA（秒）",
         min_value=0,
         max_value=604800,
-        value=int(scheduler.get("wait_sla_seconds", 900)),
+        value=int(selected_record["wait_sla_seconds"]),
         step=60,
         help="任务等待超过该值时计为超时；显式截止时间优先。",
     )
@@ -42,29 +55,27 @@ with st.form("scheduler_config_form"):
         "随机种子",
         min_value=0,
         max_value=2_147_483_647,
-        value=int(scheduler.get("random_seed", 20261122)),
+        value=int(selected_record["random_seed"]),
         step=1,
-        help="用于后续仿真和确定性抽样。",
     )
     allow_skip_head = st.toggle(
         "允许跳过队列头部任务",
-        value=bool(scheduler.get("allow_skip_head", False)),
-        help="首版默认关闭，避免提前改变 FIFO 的公平性语义。",
+        value=bool(selected_record["allow_skip_head"]),
+        help="关闭时严格遵守排序队列头部；开启后可寻找后续可放置任务。",
     )
     submitted = st.form_submit_button("保存调度配置", icon=":material/save:", width="stretch")
     if submitted:
-        save_scheduler(
-            {
-                "preset": preset,
-                "wait_sla_seconds": wait_sla,
-                "random_seed": random_seed,
-                "allow_skip_head": allow_skip_head,
-            }
-        )
-        st.success("调度配置已保存到当前会话。", icon=":material/check_circle:")
+        with database.session_scope() as session:
+            set_default_scheduler(
+                session,
+                preset=preset,
+                random_seed=int(random_seed),
+                wait_sla_seconds=int(wait_sla),
+                allow_skip_head=bool(allow_skip_head),
+            )
+        st.toast("调度配置已写入 SQLite。", icon=":material/check_circle:")
+        st.rerun()
 
-tasks = get_tasks()
-servers = get_servers()
 ordered = order_tasks(tasks, preset)
 order_rows = [
     {
@@ -93,12 +104,12 @@ st.dataframe(
         "预计时长 秒": st.column_config.NumberColumn(format="%.0f"),
         "GPU 需求": st.column_config.NumberColumn(format="%.1f"),
     },
-    alt="按当前调度预设生成的任务确定性排序预览",
+    alt="按当前 SQLite 调度预设生成的任务确定性排序预览",
 )
 
 section_header(
     "静态容量预检",
-    "检查每个任务是否能被至少一台服务器容纳；这不是动态调度，也不存在资源时间重叠计算。",
+    "检查每个用户任务是否能被至少一台服务器容纳；正式仿真的并发占用和释放由引擎计算。",
     icon=":material/fact_check:",
 )
 preflight = pd.DataFrame(preflight_tasks(tasks, servers))
@@ -111,13 +122,11 @@ st.dataframe(
         "CPU 需求": st.column_config.NumberColumn(format="%.0f"),
         "内存需求 GB": st.column_config.NumberColumn(format="%.1f"),
     },
-    alt="当前任务相对虚拟集群容量的静态可容纳性预检",
+    alt="当前用户任务相对 SQLite 虚拟集群容量的静态可容纳性预检",
 )
 if not preflight.empty and (preflight["预检结果"] == "可容纳").all():
-    st.success("全部任务均可由至少一台服务器容纳。", icon=":material/check_circle:")
+    st.success("全部用户任务均可由至少一台服务器容纳。", icon=":material/check_circle:")
 else:
-    st.warning("存在当前配置无法容纳的任务；阶段 4 会把它们保留在等待或不可调度状态。", icon=":material/warning:")
+    st.warning("存在当前配置无法容纳的任务；仿真时会保留为等待或受阻状态。", icon=":material/warning:")
 
-st.caption(
-    "Best Fit 首版保持 FIFO 排序，只改变服务器放置规则；这样策略差异更容易解释。"
-)
+st.caption("Best Fit 首版保持 FIFO 排序，只改变服务器放置规则；这样策略差异更容易解释。")

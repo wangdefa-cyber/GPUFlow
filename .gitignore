@@ -32,3 +32,4 @@ Thumbs.db
 .idea/
 .tmp/
 pytest-cache-files-*
+.test-tmp/
