@@ -1,22 +1,36 @@
-# GPU 资源管理与智能调度仿真系统
+# GPUFlow：GPU 资源管理与智能调度仿真系统
 
-本项目基于阿里巴巴公开的 `cluster-trace-gpu-v2020` GPU 集群追踪数据，目标是在后续阶段实现资源管理、任务调度、离散事件仿真、动态可视化和策略评价的一体化 Web 系统。
+GPUFlow 基于阿里巴巴公开 `cluster-trace-gpu-v2020` GPU 集群追踪数据，目标是在后续阶段实现真实数据导入、虚拟 GPU 集群管理、任务调度、离散事件仿真、动态可视化、策略评价和 AI 辅助决策。
 
-当前进度：**阶段 0（环境与项目审计）和阶段 1（数据集研究）已完成，等待确认后进入阶段 2。**
+当前进度：**阶段 0、1、2 已完成，等待确认后进入阶段 3（可操作原型）。**
 
-## 当前交付物
+## 阶段 0：环境与项目审计
 
-- `docs/project_brief.md`：项目原始需求。
-- `docs/reference/alibaba_gpu_trace_readme.md`：官方数据说明快照。
-- `docs/stage0_environment_audit.md`：环境与项目审计报告。
-- `docs/stage1_data_dictionary.md`：七张表的数据字典。
-- `docs/stage1_data_audit_report.md`：数据规模、质量与导入方案。
-- `docs/stage1_data_relationships.md`：表间关系和关联完整性。
-- `docs/stage1_database_recommendations.md`：数据库与业务模型建议。
-- `reports/data_audit.json`：完整机器可读审计结果。
-- `reports/data_profile_summary.csv`：表级摘要。
-- `reports/data_relationships.json`：键覆盖率审计结果。
-- `reports/data_quality_checks.json`：状态完整性与 GPU 指标口径检查。
+- `docs/stage0_environment_audit.md`
+- `docs/reference/alibaba_gpu_trace_readme.md`
+- `environment.yml`
+
+## 阶段 1：数据集研究
+
+- `docs/stage1_data_dictionary.md`
+- `docs/stage1_data_audit_report.md`
+- `docs/stage1_data_relationships.md`
+- `docs/stage1_database_recommendations.md`
+- `reports/data_audit.json`
+- `reports/data_profile_summary.csv`
+- `reports/data_relationships.json`
+- `reports/data_quality_checks.json`
+
+## 阶段 2：系统分析与设计
+
+- `docs/stage2_requirements_analysis.md`：角色、用例、业务流程图、功能和非功能需求
+- `docs/stage2_system_design.md`：模块化单体架构、模块边界、调度与仿真设计
+- `docs/stage2_database_design.md`：历史/配置/仿真 ER 图和表设计
+- `docs/stage2_module_interfaces.md`：接口契约、依赖规则和测试面
+- `docs/stage2_metrics_definitions.md`：评价指标、公式和比较规则
+- `docs/glossary.md`：统一领域术语
+- `docs/adr/`：关键架构决策记录
+- `docs/stage2_acceptance_report.md`：阶段验收、未完成项和风险
 
 ## 环境
 
@@ -25,7 +39,9 @@ conda env create -f environment.yml
 conda activate gpu_analysis
 ```
 
-已在本机创建的环境为 `D:\anaconda3\envs\gpu_analysis`。
+本机已验证环境：`D:\anaconda3\envs\gpu_analysis`
+
+核心版本：Python 3.11.18、pandas 3.1.1、SQLAlchemy 2.1.9、pytest 9.2.0、plotly 7.1.0、streamlit 1.67.0。
 
 ## 复现数据审计
 
@@ -35,10 +51,9 @@ conda run -n gpu_analysis python scripts\audit_relations.py
 conda run -n gpu_analysis python scripts\audit_quality.py
 ```
 
-原始数据体积较大，`data/` 中的 CSV 和 TAR 文件不纳入 Git。审计脚本使用分块读取和流式 SHA-256，不会一次性加载整张表。
-
 ## 当前边界
 
-- 尚未开始系统分析、架构实现、数据库建表、调度算法或 Web 页面开发。
-- 历史监控指标只表示采集期内的观测值，不能直接作为未来仿真结果。
-- 仿真生成的资源状态、任务时间和利用指标将在后续阶段明确标记为仿真数据。
+- 尚未实现数据库、调度算法、仿真引擎或 Web 页面。
+- 历史数据中的缺失值、状态差异、部分采样和指标口径已记录，不得无提示删除或伪造。
+- 真实历史数据、系统配置数据和仿真生成数据必须保持可区分。
+- 原始 CSV/TAR 不纳入 Git。
