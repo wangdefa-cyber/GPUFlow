@@ -93,8 +93,8 @@ with capabilities[2]:
 with capabilities[3]:
     with st.container(border=True):
         st.markdown("**:material/smart_toy: AI 建议**")
-        st.badge("阶段 6", color="gray")
-        st.write("只基于真实指标和事件提出可追溯建议。")
+        st.badge("已完成", color="green")
+        st.write("规则建议、证据链和用户确认采用已形成闭环。")
 
 st.caption(
     "当前页面只展示真实历史聚合与系统配置原型；尚无仿真运行，因此不展示虚构利用率、等待时间或策略胜负。"

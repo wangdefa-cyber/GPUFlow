@@ -15,6 +15,7 @@ def source_badge(kind: str) -> None:
         "CONFIG": ("系统配置数据", "violet"),
         "SIMULATION": ("仿真生成数据", "orange"),
         "PROTOTYPE": ("阶段 3 原型", "gray"),
+        "FINAL": ("GPUFlow v1.0", "green"),
     }
     label, color = config.get(kind, (kind, "gray"))
     st.badge(label, color=color)

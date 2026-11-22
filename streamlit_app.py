@@ -30,7 +30,7 @@ st.logo(str(PROJECT_ROOT / "assets" / "logo.svg"))
 
 with st.sidebar:
     st.caption("GPU cluster resource intelligence")
-    st.badge("阶段 3 · 可操作原型", color="blue")
+    st.badge("GPUFlow v1.0 · 最终交付", color="green")
     st.caption("真实历史数据只读 · 配置数据仅保存在当前会话")
 
 page = st.navigation(
@@ -88,7 +88,7 @@ page = st.navigation(
                 "app_pages/ai_decision.py",
                 title="AI 决策",
                 icon=":material/smart_toy:",
-                help="展示有证据边界的调度建议规则；规则引擎将在阶段 6 实现。",
+                help="基于真实实验指标生成带证据链的调度建议，并在用户确认后采用调度预设。",
             ),
         ],
         "系统": [

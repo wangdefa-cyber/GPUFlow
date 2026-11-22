@@ -376,7 +376,6 @@ class SimulationEngine:
             self.initialize()
         if self._finished and self._final_result is not None:
             waiting, running, completed, blocked = self._counts()
-            capacity = self.total_capacity
             return EngineStep(
                 simulation_time=(
                     self.samples_by_time and max(self.samples_by_time)

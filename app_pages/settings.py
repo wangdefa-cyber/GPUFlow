@@ -18,7 +18,7 @@ from gpu_sim.services import (
 
 
 page_caption("查看数据来源、SQLite 状态和运行环境。系统配置可以下载，原始历史数据始终只读。")
-source_badge("PROTOTYPE")
+source_badge("FINAL")
 
 versions = pd.DataFrame(
     [

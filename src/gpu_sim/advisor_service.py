@@ -5,7 +5,6 @@ from __future__ import annotations
 from uuid import uuid4
 
 from sqlalchemy import delete, select
-from sqlalchemy.orm import Session
 
 from gpu_sim.advisor import ComparisonMetric, Recommendation, analyze_run
 from gpu_sim.compatibility import run_compatibility_key
