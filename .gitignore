@@ -1,0 +1,32 @@
+# Raw data is large and reproducible from the official Alibaba repository.
+data/*.tar
+data/**/*.csv
+
+# Local databases and generated simulation artifacts
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+artifacts/
+db/
+
+# Python and tooling
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# Local configuration and secrets
+.env
+.env.*
+.streamlit/secrets.toml
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

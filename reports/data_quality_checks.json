@@ -1,0 +1,172 @@
+{
+  "status_completeness": {
+    "pai_job_table": {
+      "Running": {
+        "rows": 62928,
+        "missing_start_time": 0,
+        "missing_end_time": 61867
+      },
+      "Terminated": {
+        "rows": 732355,
+        "missing_start_time": 0,
+        "missing_end_time": 0
+      },
+      "Failed": {
+        "rows": 256555,
+        "missing_start_time": 0,
+        "missing_end_time": 230935
+      },
+      "Waiting": {
+        "rows": 3663,
+        "missing_start_time": 3663,
+        "missing_end_time": 3618
+      }
+    },
+    "pai_task_table": {
+      "Terminated": {
+        "rows": 885073,
+        "missing_start_time": 0,
+        "missing_end_time": 0,
+        "missing_plan_cpu": 0,
+        "missing_plan_mem": 0,
+        "missing_plan_gpu": 152382,
+        "missing_gpu_type": 152382
+      },
+      "Failed": {
+        "rows": 256762,
+        "missing_start_time": 0,
+        "missing_end_time": 255522,
+        "missing_plan_cpu": 0,
+        "missing_plan_mem": 0,
+        "missing_plan_gpu": 4095,
+        "missing_gpu_type": 4096
+      },
+      "Running": {
+        "rows": 115501,
+        "missing_start_time": 0,
+        "missing_end_time": 90325,
+        "missing_plan_cpu": 14740,
+        "missing_plan_mem": 14740,
+        "missing_plan_gpu": 63774,
+        "missing_gpu_type": 57546
+      },
+      "Waiting": {
+        "rows": 3714,
+        "missing_start_time": 3714,
+        "missing_end_time": 3714,
+        "missing_plan_cpu": 3714,
+        "missing_plan_mem": 3714,
+        "missing_plan_gpu": 3714,
+        "missing_gpu_type": 3714
+      }
+    },
+    "pai_instance_table": {
+      "Terminated": {
+        "rows": 4757371,
+        "missing_start_time": 0,
+        "missing_end_time": 11,
+        "missing_worker_name": 0,
+        "missing_machine": 0
+      },
+      "Failed": {
+        "rows": 969975,
+        "missing_start_time": 97316,
+        "missing_end_time": 888444,
+        "missing_worker_name": 87,
+        "missing_machine": 87
+      },
+      "Running": {
+        "rows": 809664,
+        "missing_start_time": 691160,
+        "missing_end_time": 809664,
+        "missing_worker_name": 0,
+        "missing_machine": 0
+      },
+      "Interrupted": {
+        "rows": 654022,
+        "missing_start_time": 654022,
+        "missing_end_time": 238493,
+        "missing_worker_name": 0,
+        "missing_machine": 0
+      },
+      "Waiting": {
+        "rows": 323840,
+        "missing_start_time": 323840,
+        "missing_end_time": 323840,
+        "missing_worker_name": 323840,
+        "missing_machine": 323840
+      },
+      "Ready": {
+        "rows": 7130,
+        "missing_start_time": 7130,
+        "missing_end_time": 7130,
+        "missing_worker_name": 7130,
+        "missing_machine": 7130
+      }
+    }
+  },
+  "task_gpu_missing_matrix": {
+    "gpu_type=<NULL>|plan_gpu_missing=False|gpu_type_missing=True": 1,
+    "gpu_type=<NULL>|plan_gpu_missing=True|gpu_type_missing=True": 217737,
+    "gpu_type=MISC|plan_gpu_missing=False|gpu_type_missing=False": 693598,
+    "gpu_type=MISC|plan_gpu_missing=True|gpu_type_missing=False": 2683,
+    "gpu_type=P100|plan_gpu_missing=False|gpu_type_missing=False": 71344,
+    "gpu_type=P100|plan_gpu_missing=True|gpu_type_missing=False": 1388,
+    "gpu_type=T4|plan_gpu_missing=False|gpu_type_missing=False": 225991,
+    "gpu_type=T4|plan_gpu_missing=True|gpu_type_missing=False": 932,
+    "gpu_type=V100|plan_gpu_missing=False|gpu_type_missing=False": 28144,
+    "gpu_type=V100|plan_gpu_missing=True|gpu_type_missing=False": 653,
+    "gpu_type=V100M32|plan_gpu_missing=False|gpu_type_missing=False": 18007,
+    "gpu_type=V100M32|plan_gpu_missing=True|gpu_type_missing=False": 572
+  },
+  "task_resource_quantiles": {
+    "plan_cpu": {
+      "count": 1242596,
+      "p50": 600.0,
+      "p90": 1000.0,
+      "p95": 1800.0,
+      "p99": 2000.0,
+      "max": 9000.0
+    },
+    "plan_mem": {
+      "count": 1242596,
+      "p50": 29.296875,
+      "p90": 29.296875,
+      "p95": 58.59375,
+      "p99": 78.125,
+      "max": 400.0
+    },
+    "plan_gpu": {
+      "count": 1037085,
+      "p50": 50.0,
+      "p90": 100.0,
+      "p95": 100.0,
+      "p99": 400.0,
+      "max": 800.0
+    },
+    "duration": {
+      "count": 911489,
+      "p50": 621.0,
+      "p90": 12501.0,
+      "p95": 23731.0,
+      "p99": 71147.23999999999,
+      "max": 639766.0
+    }
+  },
+  "machine_gpu_normalization": {
+    "valid_rows_with_gpu_capacity": 1767929,
+    "unknown_machine_rows": 0,
+    "raw_machine_gpu_gt_100": 1044545,
+    "normalized_gt_1": 1593,
+    "normalized_gt_1_05": 1522,
+    "normalized_mean": 0.23959677082100872,
+    "normalized_max": 3.2994596556730973
+  },
+  "sensor_gpu_checks": {
+    "non_null_rows": 3033232,
+    "zero": 1047917,
+    "gt_100": 12985,
+    "gt_800": 0,
+    "max": 792.0
+  }
+}

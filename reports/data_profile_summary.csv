@@ -1,0 +1,8 @@
+﻿table,rows,columns,file_size_mb,duplicate_rows,missing_cells,checksum_match,audit_seconds
+pai_job_table,1055501,6,127.113,0,300083,True,5.4
+pai_task_table,1261050,10,108.146,0,832016,True,4.33
+pai_instance_table,7522002,9,1883.676,0,4703164,True,47.46
+pai_sensor_table,3033232,16,1007.938,0,7058,True,20.59
+pai_group_tag_table,1055032,5,110.17,0,1986634,True,4.56
+pai_machine_spec,1897,5,0.07,0,0,True,0.02
+pai_machine_metric,2009423,12,417.106,0,3752640,True,8.89

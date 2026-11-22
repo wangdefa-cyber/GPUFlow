@@ -1,0 +1,1418 @@
+{
+  "dataset": "Alibaba cluster-trace-gpu-v2020",
+  "official_readme": "docs/reference/alibaba_gpu_trace_readme.md",
+  "method": "CSV read in bounded-memory chunks. Duplicate and key-cardinality counts use pandas 64-bit row hashes; collisions are theoretically possible but negligible. SHA-256 is calculated by streaming.",
+  "chunksize": 200000,
+  "tables": [
+    {
+      "table": "pai_job_table",
+      "path": "data\\pai_job_table\\pai_job_table.csv",
+      "file_size_bytes": 133288147,
+      "file_size_mb": 127.113,
+      "sha256": "379ecb3becaba347f44a53bf7eb53e54b185221b2a0338a3f828828d269ba96c",
+      "checksum_match": true,
+      "rows": 1055501,
+      "columns": 6,
+      "chunks": 6,
+      "duplicate_rows_by_full_row_hash": 0,
+      "unique_rows_by_full_row_hash": 1055501,
+      "key_cardinality": {
+        "job_name": 1055501,
+        "inst_id": 1055501,
+        "job_name+inst_id": 1055501
+      },
+      "key_duplicate_rows": {
+        "job_name": 0,
+        "inst_id": 0,
+        "job_name+inst_id": 0
+      },
+      "fields": [
+        {
+          "name": "job_name",
+          "dtype": "string",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "inst_id",
+          "dtype": "string",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "user",
+          "dtype": "string",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "status",
+          "dtype": "string",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "start_time",
+          "dtype": "float64",
+          "missing": 3663,
+          "missing_pct": 0.347039
+        },
+        {
+          "name": "end_time",
+          "dtype": "float64",
+          "missing": 296420,
+          "missing_pct": 28.083346
+        }
+      ],
+      "numeric_profile": {
+        "start_time": {
+          "non_null": 1051838,
+          "min": 494319.0,
+          "max": 6451081.0,
+          "mean": 4032086.752294555,
+          "negative_values": 0,
+          "zero_values": 0
+        },
+        "end_time": {
+          "non_null": 759081,
+          "min": 731772.0,
+          "max": 6451192.0,
+          "mean": 3919303.2367889592,
+          "negative_values": 0,
+          "zero_values": 0
+        }
+      },
+      "duration_profile": {
+        "start_time->end_time": {
+          "valid_pairs": 759036,
+          "negative_durations": 0,
+          "zero_durations": 3,
+          "min": 0.0,
+          "max": 639766.0,
+          "mean": 5541.549294104628
+        }
+      },
+      "categorical_profile": {
+        "status": {
+          "Terminated": 732355,
+          "Failed": 256555,
+          "Running": 62928,
+          "Waiting": 3663
+        }
+      },
+      "sample_rows": [
+        {
+          "job_name": "87a79c6373f7439d82f32a1c",
+          "inst_id": "38e2d7187762a9241cc1cd5732dbe52a5d8b37ed7dafe1c1e1bb9f50bfa2",
+          "user": "74238accb90b",
+          "status": "Running",
+          "start_time": 1053513.0,
+          "end_time": null
+        },
+        {
+          "job_name": "9605ac7cc4c55a193fbe956b",
+          "inst_id": "e1cbdf28400847d65d00da4f0522ce7a43275fe9cb5d2a99b1bb4328175c",
+          "user": "61d6b6dd5b15",
+          "status": "Running",
+          "start_time": 1097614.0,
+          "end_time": null
+        },
+        {
+          "job_name": "a2d8872d080eb634a42ea9a6",
+          "inst_id": "27ddabc2f7490279c6d5bd95c8a75e5c96d841c60306594f958e16f8d055",
+          "user": "61d6b6dd5b15",
+          "status": "Running",
+          "start_time": 1103820.0,
+          "end_time": null
+        },
+        {
+          "job_name": "bfb1f0f3c42d2627932348fa",
+          "inst_id": "d1349b495ea36d910f1fee203b63c6ce3961082e802aff31f7f8852ca8e3",
+          "user": "5b1345f03aa1",
+          "status": "Terminated",
+          "start_time": 2618680.0,
+          "end_time": 2619091.0
+        },
+        {
+          "job_name": "0aad31bb99328938840eaf96",
+          "inst_id": "9f9280954d4fad40e90d04954ff7dfe9ec7da50408f6258b24e983bfa30b",
+          "user": "5b1345f03aa1",
+          "status": "Terminated",
+          "start_time": 2619105.0,
+          "end_time": 2619168.0
+        }
+      ],
+      "audit_seconds": 5.4
+    },
+    {
+      "table": "pai_task_table",
+      "path": "data\\pai_task_table\\pai_task_table.csv",
+      "file_size_bytes": 113398956,
+      "file_size_mb": 108.146,
+      "sha256": "6954802b457305f8a9e480ef97c40060baee59649fd3adc62c5a1e048aa058de",
+      "checksum_match": true,
+      "rows": 1261050,
+      "columns": 10,
+      "chunks": 7,
+      "duplicate_rows_by_full_row_hash": 0,
+      "unique_rows_by_full_row_hash": 1261050,
+      "key_cardinality": {
+        "job_name": 1055501,
+        "job_name+task_name": 1261050
+      },
+      "key_duplicate_rows": {
+        "job_name": 205549,
+        "job_name+task_name": 0
+      },
+      "fields": [
+        {
+          "name": "job_name",
+          "dtype": "string",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "task_name",
+          "dtype": "string",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "inst_num",
+          "dtype": "float64",
+          "missing": 130,
+          "missing_pct": 0.010309
+        },
+        {
+          "name": "status",
+          "dtype": "string",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "start_time",
+          "dtype": "float64",
+          "missing": 3714,
+          "missing_pct": 0.294516
+        },
+        {
+          "name": "end_time",
+          "dtype": "float64",
+          "missing": 349561,
+          "missing_pct": 27.719837
+        },
+        {
+          "name": "plan_cpu",
+          "dtype": "float64",
+          "missing": 18454,
+          "missing_pct": 1.463384
+        },
+        {
+          "name": "plan_mem",
+          "dtype": "float64",
+          "missing": 18454,
+          "missing_pct": 1.463384
+        },
+        {
+          "name": "plan_gpu",
+          "dtype": "float64",
+          "missing": 223965,
+          "missing_pct": 17.7602
+        },
+        {
+          "name": "gpu_type",
+          "dtype": "string",
+          "missing": 217738,
+          "missing_pct": 17.266405
+        }
+      ],
+      "numeric_profile": {
+        "inst_num": {
+          "non_null": 1260920,
+          "min": 1.0,
+          "max": 1200.0,
+          "mean": 5.430069314468801,
+          "negative_values": 0,
+          "zero_values": 0
+        },
+        "start_time": {
+          "non_null": 1257336,
+          "min": 494319.0,
+          "max": 6451081.0,
+          "mean": 3995088.8016496785,
+          "negative_values": 0,
+          "zero_values": 0
+        },
+        "end_time": {
+          "non_null": 911489,
+          "min": 675318.0,
+          "max": 6451192.0,
+          "mean": 3907677.0260902764,
+          "negative_values": 0,
+          "zero_values": 0
+        },
+        "plan_cpu": {
+          "non_null": 1242596,
+          "min": 0.0,
+          "max": 9000.0,
+          "mean": 633.3741143541424,
+          "negative_values": 0,
+          "zero_values": 11
+        },
+        "plan_mem": {
+          "non_null": 1242596,
+          "min": 0.00390625,
+          "max": 400.0,
+          "mean": 28.361568610380505,
+          "negative_values": 0,
+          "zero_values": 0
+        },
+        "plan_gpu": {
+          "non_null": 1037085,
+          "min": 1.0,
+          "max": 800.0,
+          "mean": 68.25529247843716,
+          "negative_values": 0,
+          "zero_values": 0
+        }
+      },
+      "duration_profile": {
+        "start_time->end_time": {
+          "valid_pairs": 911489,
+          "negative_durations": 0,
+          "zero_durations": 118,
+          "min": 0.0,
+          "max": 639766.0,
+          "mean": 5405.409122874768
+        }
+      },
+      "categorical_profile": {
+        "task_name": {
+          "tensorflow": 621415,
+          "worker": 275785,
+          "ps": 183283,
+          "PyTorchWorker": 110784,
+          "xComputeWorker": 27402,
+          "evaluator": 17210,
+          "TensorboardTask": 10681,
+          "ReduceTask": 4136,
+          "DecoderWorker": 4136,
+          "JupyterTask": 2066,
+          "TVMTuneMain": 1158,
+          "OpenmpiWorker": 745,
+          "OpenmpiTracker": 745,
+          "OssToVolumeWorker": 672,
+          "MWorker": 404,
+          "chief": 371,
+          "BladeMain": 39,
+          "aligraph": 6,
+          "TransformGraph": 3,
+          "M1": 3,
+          "R2_1": 2,
+          "TfClientWorker": 2,
+          "R3_1_2": 1,
+          "M2": 1
+        },
+        "status": {
+          "Terminated": 885073,
+          "Failed": 256762,
+          "Running": 115501,
+          "Waiting": 3714
+        },
+        "gpu_type": {
+          "MISC": 696281,
+          "T4": 226923,
+          "<NULL>": 217738,
+          "P100": 72732,
+          "V100": 28797,
+          "V100M32": 18579
+        }
+      },
+      "sample_rows": [
+        {
+          "job_name": "c936346f45eccd34bf748541",
+          "task_name": "tensorflow",
+          "inst_num": 1.0,
+          "status": "Terminated",
+          "start_time": 2693235.0,
+          "end_time": 2695847.0,
+          "plan_cpu": 600.0,
+          "plan_mem": 29.296875,
+          "plan_gpu": 50.0,
+          "gpu_type": "MISC"
+        },
+        {
+          "job_name": "455c3dec270f4777ad67721c",
+          "task_name": "tensorflow",
+          "inst_num": 1.0,
+          "status": "Terminated",
+          "start_time": 3399583.0,
+          "end_time": 3399732.0,
+          "plan_cpu": 600.0,
+          "plan_mem": 29.296875,
+          "plan_gpu": 100.0,
+          "gpu_type": "MISC"
+        },
+        {
+          "job_name": "ba64aa2f0feff18428923e92",
+          "task_name": "tensorflow",
+          "inst_num": 1.0,
+          "status": "Terminated",
+          "start_time": 2152271.0,
+          "end_time": 2158213.0,
+          "plan_cpu": 600.0,
+          "plan_mem": 29.296875,
+          "plan_gpu": 50.0,
+          "gpu_type": "MISC"
+        },
+        {
+          "job_name": "0de77fcfde5740adf04c38d5",
+          "task_name": "tensorflow",
+          "inst_num": 1.0,
+          "status": "Failed",
+          "start_time": 5772336.0,
+          "end_time": null,
+          "plan_cpu": 600.0,
+          "plan_mem": 29.296875,
+          "plan_gpu": 100.0,
+          "gpu_type": "MISC"
+        },
+        {
+          "job_name": "4a7a1fbbc8ec426e760349e0",
+          "task_name": "PyTorchWorker",
+          "inst_num": 1.0,
+          "status": "Failed",
+          "start_time": 5837217.0,
+          "end_time": null,
+          "plan_cpu": 1800.0,
+          "plan_mem": 58.59375,
+          "plan_gpu": 100.0,
+          "gpu_type": "MISC"
+        }
+      ],
+      "audit_seconds": 4.33
+    },
+    {
+      "table": "pai_instance_table",
+      "path": "data\\pai_instance_table\\pai_instance_table.csv",
+      "file_size_bytes": 1975177534,
+      "file_size_mb": 1883.676,
+      "sha256": "b179f7d7e0927a6663d719b728c92640447c5a0fc3c6e4edff31e7207ab9dd17",
+      "checksum_match": true,
+      "rows": 7522002,
+      "columns": 9,
+      "chunks": 38,
+      "duplicate_rows_by_full_row_hash": 0,
+      "unique_rows_by_full_row_hash": 7522002,
+      "key_cardinality": {
+        "worker_name": 7164359,
+        "inst_id": 1055432,
+        "machine": 1898,
+        "job_name+task_name+inst_name": 6846883
+      },
+      "key_duplicate_rows": {
+        "worker_name": 357643,
+        "inst_id": 6466570,
+        "machine": 7520104,
+        "job_name+task_name+inst_name": 675119
+      },
+      "fields": [
+        {
+          "name": "job_name",
+          "dtype": "string",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "task_name",
+          "dtype": "string",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "inst_name",
+          "dtype": "string",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "worker_name",
+          "dtype": "string",
+          "missing": 331057,
+          "missing_pct": 4.401182
+        },
+        {
+          "name": "inst_id",
+          "dtype": "string",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "status",
+          "dtype": "string",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "start_time",
+          "dtype": "float64",
+          "missing": 1773468,
+          "missing_pct": 23.577074
+        },
+        {
+          "name": "end_time",
+          "dtype": "float64",
+          "missing": 2267582,
+          "missing_pct": 30.14599
+        },
+        {
+          "name": "machine",
+          "dtype": "string",
+          "missing": 331057,
+          "missing_pct": 4.401182
+        }
+      ],
+      "numeric_profile": {
+        "start_time": {
+          "non_null": 5748534,
+          "min": 494366.0,
+          "max": 6451090.0,
+          "mean": 3873839.411231803,
+          "negative_values": 0,
+          "zero_values": 0
+        },
+        "end_time": {
+          "non_null": 5254420,
+          "min": 532768.0,
+          "max": 6451192.0,
+          "mean": 3924894.0298381173,
+          "negative_values": 0,
+          "zero_values": 0
+        }
+      },
+      "duration_profile": {
+        "start_time->end_time": {
+          "valid_pairs": 4758813,
+          "negative_durations": 0,
+          "zero_durations": 29709,
+          "min": 0.0,
+          "max": 626371.0,
+          "mean": 6606.836673346904
+        }
+      },
+      "categorical_profile": {
+        "task_name": {
+          "worker": 5044871,
+          "ps": 720943,
+          "tensorflow": 651188,
+          "DecoderWorker": 579093,
+          "PyTorchWorker": 399022,
+          "OssToVolumeWorker": 44642,
+          "xComputeWorker": 34765,
+          "evaluator": 19649,
+          "TensorboardTask": 10661,
+          "MWorker": 4869,
+          "ReduceTask": 4076,
+          "OpenmpiWorker": 3279,
+          "JupyterTask": 2059,
+          "TVMTuneMain": 1158,
+          "chief": 903,
+          "OpenmpiTracker": 744,
+          "BladeMain": 39,
+          "M2": 14,
+          "aligraph": 12,
+          "R3_1_2": 5,
+          "TransformGraph": 3,
+          "M1": 3,
+          "TfClientWorker": 2,
+          "R2_1": 2
+        },
+        "status": {
+          "Terminated": 4757371,
+          "Failed": 969975,
+          "Running": 809664,
+          "Interrupted": 654022,
+          "Waiting": 323840,
+          "Ready": 7130
+        }
+      },
+      "sample_rows": [
+        {
+          "job_name": "54670e2998350a9f0e4868d5",
+          "task_name": "worker",
+          "inst_name": "c47ee192deea8c5aa87d8d7c2e02120cd03f75304a69dde378ac4abad45c",
+          "worker_name": "05b1590648df3f4c6deea2496bbbefd4d3ae93347669f764d466128a150f",
+          "inst_id": "68889727c2257f702108d185e5eed342a39807a2893d4bac00987159d00c",
+          "status": "Terminated",
+          "start_time": 3272995.0,
+          "end_time": 3273065.0,
+          "machine": "165261853e188ca69c4fbcdf"
+        },
+        {
+          "job_name": "54670e2998350a9f0e4868d5",
+          "task_name": "worker",
+          "inst_name": "92759a73039692b2d3e0929cadf55f5b07b40d6582c36fdf15c6c1cb493a",
+          "worker_name": "cbc1bc591c53301bceafa44dc626288fd92d2fc5dca43813d9ff7f8d56ae",
+          "inst_id": "68889727c2257f702108d185e5eed342a39807a2893d4bac00987159d00c",
+          "status": "Terminated",
+          "start_time": 3272995.0,
+          "end_time": 3273056.0,
+          "machine": "31dbf829549b10917e7193a6"
+        },
+        {
+          "job_name": "54670e2998350a9f0e4868d5",
+          "task_name": "worker",
+          "inst_name": "b3e42abde4c35da06ff4746802b82678b1bf56b28efaa1b4994b1abbdc88",
+          "worker_name": "09d41bf627188adc004b2db7c0a47578325952cc3340af02a351480dae90",
+          "inst_id": "68889727c2257f702108d185e5eed342a39807a2893d4bac00987159d00c",
+          "status": "Terminated",
+          "start_time": 3272995.0,
+          "end_time": 3273067.0,
+          "machine": "31dbf829549b10917e7193a6"
+        },
+        {
+          "job_name": "fc239cb39d995630f1a5af05",
+          "task_name": "xComputeWorker",
+          "inst_name": "bdb304c703badf7feed338be6a18b1271539c490878bf44961dc96a74087",
+          "worker_name": "6351d9e7875abd3907c4944452512091c03252470fecc2836d3f8f7d8d96",
+          "inst_id": "4279b26d40b05134d11aaf7c6c28efd2c225d435910e235970ba0930f04f",
+          "status": "Terminated",
+          "start_time": 6099125.0,
+          "end_time": 6099131.0,
+          "machine": "ef3e9da0d13cc7f9485e6e47"
+        },
+        {
+          "job_name": "60e8ba457229422aa4108bf2",
+          "task_name": "ps",
+          "inst_name": "e602a04dd770b3f17cc85e4193e4c1c80fba894945365c4691348567f458",
+          "worker_name": "f23fe8072a8cc1d6da6c65223b19d77d7d7a41dbd7b3c18b8ac96a06e654",
+          "inst_id": "6d98538a15a2663eded75e5f26b2fa24c6080529319c0e7d5b56db365b68",
+          "status": "Running",
+          "start_time": null,
+          "end_time": null,
+          "machine": "3f1075af549e4b8963c5e80b"
+        }
+      ],
+      "audit_seconds": 47.46
+    },
+    {
+      "table": "pai_sensor_table",
+      "path": "data\\pai_sensor_table\\pai_sensor_table.csv",
+      "file_size_bytes": 1056899391,
+      "file_size_mb": 1007.938,
+      "sha256": "12dd9929b70f3efe18d1279d9873e3a519c64f431613b23b059ed8c46a376dd7",
+      "checksum_match": true,
+      "rows": 3033232,
+      "columns": 16,
+      "chunks": 16,
+      "duplicate_rows_by_full_row_hash": 0,
+      "unique_rows_by_full_row_hash": 3033232,
+      "key_cardinality": {
+        "worker_name": 3033232,
+        "inst_id": 838678,
+        "machine": 1737,
+        "worker_name+gpu_name": 3033232
+      },
+      "key_duplicate_rows": {
+        "worker_name": 0,
+        "inst_id": 2194554,
+        "machine": 3031495,
+        "worker_name+gpu_name": 0
+      },
+      "fields": [
+        {
+          "name": "job_name",
+          "dtype": "string",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "task_name",
+          "dtype": "string",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "worker_name",
+          "dtype": "string",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "inst_id",
+          "dtype": "string",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "machine",
+          "dtype": "string",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "gpu_name",
+          "dtype": "string",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "cpu_usage",
+          "dtype": "float64",
+          "missing": 5829,
+          "missing_pct": 0.192171
+        },
+        {
+          "name": "gpu_wrk_util",
+          "dtype": "float64",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "avg_mem",
+          "dtype": "float64",
+          "missing": 1217,
+          "missing_pct": 0.040122
+        },
+        {
+          "name": "max_mem",
+          "dtype": "float64",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "avg_gpu_wrk_mem",
+          "dtype": "float64",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "max_gpu_wrk_mem",
+          "dtype": "float64",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "read",
+          "dtype": "float64",
+          "missing": 3,
+          "missing_pct": 9.9e-05
+        },
+        {
+          "name": "write",
+          "dtype": "float64",
+          "missing": 3,
+          "missing_pct": 9.9e-05
+        },
+        {
+          "name": "read_count",
+          "dtype": "float64",
+          "missing": 3,
+          "missing_pct": 9.9e-05
+        },
+        {
+          "name": "write_count",
+          "dtype": "float64",
+          "missing": 3,
+          "missing_pct": 9.9e-05
+        }
+      ],
+      "numeric_profile": {
+        "cpu_usage": {
+          "non_null": 3027403,
+          "min": 0.0,
+          "max": 9206.331084120558,
+          "mean": 258.8387904408376,
+          "negative_values": 0,
+          "zero_values": 1212
+        },
+        "gpu_wrk_util": {
+          "non_null": 3033232,
+          "min": 0.0,
+          "max": 792.0,
+          "mean": 10.451583894735135,
+          "negative_values": 0,
+          "zero_values": 1047917
+        },
+        "avg_mem": {
+          "non_null": 3032015,
+          "min": 0.0,
+          "max": 391.6291332827386,
+          "mean": 5.5428028121960535,
+          "negative_values": 0,
+          "zero_values": 5
+        },
+        "max_mem": {
+          "non_null": 3033232,
+          "min": 0.0,
+          "max": 2757.5859375,
+          "mean": 10.69311281826793,
+          "negative_values": 0,
+          "zero_values": 1222
+        },
+        "avg_gpu_wrk_mem": {
+          "non_null": 3033232,
+          "min": 0.0,
+          "max": 253.22959097602646,
+          "mean": 1.724300306449765,
+          "negative_values": 0,
+          "zero_values": 495412
+        },
+        "max_gpu_wrk_mem": {
+          "non_null": 3033232,
+          "min": 0.0,
+          "max": 253.646484375,
+          "mean": 2.3385651717015463,
+          "negative_values": 0,
+          "zero_values": 495412
+        },
+        "read": {
+          "non_null": 3033229,
+          "min": 0.0,
+          "max": 61898350977.50975,
+          "mean": 261027266.82274553,
+          "negative_values": 0,
+          "zero_values": 1330
+        },
+        "write": {
+          "non_null": 3033229,
+          "min": 0.0,
+          "max": 49285001576.0,
+          "mean": 61846463.45108537,
+          "negative_values": 0,
+          "zero_values": 1330
+        },
+        "read_count": {
+          "non_null": 3033229,
+          "min": 0.0,
+          "max": 8557098.8,
+          "mean": 11243.851355385907,
+          "negative_values": 0,
+          "zero_values": 1330
+        },
+        "write_count": {
+          "non_null": 3033229,
+          "min": 0.0,
+          "max": 13392440.744279945,
+          "mean": 8940.943406876926,
+          "negative_values": 0,
+          "zero_values": 1330
+        }
+      },
+      "duration_profile": {},
+      "categorical_profile": {
+        "task_name": {
+          "worker": 2263800,
+          "tensorflow": 512909,
+          "PyTorchWorker": 214849,
+          "xComputeWorker": 18634,
+          "evaluator": 9774,
+          "OssToVolumeWorker": 5619,
+          "ps": 3823,
+          "OpenmpiWorker": 1725,
+          "TVMTuneMain": 852,
+          "LeadingWorker": 824,
+          "JupyterTask": 378,
+          "BladeMain": 25,
+          "chief": 17,
+          "TransformGraph": 3
+        },
+        "gpu_name": {
+          "/dev/nvidia1": 854560,
+          "/dev/nvidia0": 681397,
+          "/dev/nvidia7": 271478,
+          "/dev/nvidia6": 258091,
+          "/dev/nvidia3": 253379,
+          "/dev/nvidia5": 241767,
+          "/dev/nvidia2": 240601,
+          "/dev/nvidia4": 231959
+        }
+      },
+      "sample_rows": [
+        {
+          "job_name": "c6acdbd813439f3ca63a9406",
+          "task_name": "worker",
+          "worker_name": "d50591d4a39b5a68e7efa15a0b51cfdca03e8f7a49ade712c2288967ef15",
+          "inst_id": "dc6e6daefec62bc3729def7e15133c03b82a97a1457d68a90c469b21c4a5",
+          "machine": "4a57d4f3d41316da3c4ae876",
+          "gpu_name": "/dev/nvidia5",
+          "cpu_usage": 0.6032961755264022,
+          "gpu_wrk_util": 0.0,
+          "avg_mem": 0.23250918136105705,
+          "max_mem": 0.2568359375,
+          "avg_gpu_wrk_mem": 0.0,
+          "max_gpu_wrk_mem": 0.0,
+          "read": 4666.370826277077,
+          "write": 6608.757222657534,
+          "read_count": 50.70636706013194,
+          "write_count": 47.831054267876546
+        },
+        {
+          "job_name": "c6acdbd813439f3ca63a9406",
+          "task_name": "worker",
+          "worker_name": "fd1ee8bacf027604c2afdf89fc4edd843322b78376c9df5fc15a2ff62ce5",
+          "inst_id": "dc6e6daefec62bc3729def7e15133c03b82a97a1457d68a90c469b21c4a5",
+          "machine": "d84f5bc585e4ac5d24b30ec1",
+          "gpu_name": "/dev/nvidia7",
+          "cpu_usage": 1.0393316650236344,
+          "gpu_wrk_util": 0.0,
+          "avg_mem": 0.3056843772116624,
+          "max_mem": 0.34375,
+          "avg_gpu_wrk_mem": 0.0,
+          "max_gpu_wrk_mem": 0.0,
+          "read": 9073.576321310316,
+          "write": 6643.213254808786,
+          "read_count": 80.29949700477721,
+          "write_count": 47.311857038141696
+        },
+        {
+          "job_name": "c6acdbd813439f3ca63a9406",
+          "task_name": "worker",
+          "worker_name": "8885c53fd558926cb6aa44bbb7f40e242093778988c57d7871f871efe39b",
+          "inst_id": "dc6e6daefec62bc3729def7e15133c03b82a97a1457d68a90c469b21c4a5",
+          "machine": "b8dca09e0247ec64355414f9",
+          "gpu_name": "/dev/nvidia2",
+          "cpu_usage": 0.2875559262910442,
+          "gpu_wrk_util": 0.0,
+          "avg_mem": 0.3456542512100953,
+          "max_mem": 0.4365234375,
+          "avg_gpu_wrk_mem": 0.0,
+          "max_gpu_wrk_mem": 0.0,
+          "read": 4852.393195662614,
+          "write": 6681.693779541491,
+          "read_count": 50.627429669135296,
+          "write_count": 47.857113970123606
+        },
+        {
+          "job_name": "2115794e67a2193affc07d7e",
+          "task_name": "worker",
+          "worker_name": "f328d41794dec342b0160185ba230cc322cf3c342760a23ec2dc7b046590",
+          "inst_id": "2272fc750500c8a2a0753d4db1e8844af7e483175864c37190bc9c5181fb",
+          "machine": "7974f1d38a849f2dfd0908c8",
+          "gpu_name": "/dev/nvidia0",
+          "cpu_usage": 174.63766596785462,
+          "gpu_wrk_util": 1.2210967516590991,
+          "avg_mem": 3.757997780725892,
+          "max_mem": 4.099609375,
+          "avg_gpu_wrk_mem": 0.4296254202322738,
+          "max_gpu_wrk_mem": 0.4619140625,
+          "read": 17622896.755935755,
+          "write": 277974.5289804469,
+          "read_count": 629.7014664804468,
+          "write_count": 480.90572625698326
+        },
+        {
+          "job_name": "2115794e67a2193affc07d7e",
+          "task_name": "worker",
+          "worker_name": "aa46e02a193241751f8729b5507e1c4851a1b6082cde67111d31db90e36f",
+          "inst_id": "2272fc750500c8a2a0753d4db1e8844af7e483175864c37190bc9c5181fb",
+          "machine": "72d25529b7720627a2f89a84",
+          "gpu_name": "/dev/nvidia3",
+          "cpu_usage": 173.68542467668647,
+          "gpu_wrk_util": 1.0590289905693329,
+          "avg_mem": 3.751961655420161,
+          "max_mem": 4.0859375,
+          "avg_gpu_wrk_mem": 0.4296090475462801,
+          "max_gpu_wrk_mem": 0.4619140625,
+          "read": 20078990.932611734,
+          "write": 282148.18784916203,
+          "read_count": 692.0118715083798,
+          "write_count": 520.5199022346368
+        }
+      ],
+      "audit_seconds": 20.59
+    },
+    {
+      "table": "pai_group_tag_table",
+      "path": "data\\pai_group_tag_table\\pai_group_tag_table.csv",
+      "file_size_bytes": 115521549,
+      "file_size_mb": 110.17,
+      "sha256": "d23fcb56d88b2976fda4a62708d77b2a8c98635c4b443f100ed5553d4cd07fbe",
+      "checksum_match": true,
+      "rows": 1055032,
+      "columns": 5,
+      "chunks": 6,
+      "duplicate_rows_by_full_row_hash": 0,
+      "unique_rows_by_full_row_hash": 1055032,
+      "key_cardinality": {
+        "inst_id": 1055032,
+        "group": 316956,
+        "inst_id+group": 1055032
+      },
+      "key_duplicate_rows": {
+        "inst_id": 0,
+        "group": 738076,
+        "inst_id+group": 0
+      },
+      "fields": [
+        {
+          "name": "inst_id",
+          "dtype": "string",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "user",
+          "dtype": "string",
+          "missing": 1,
+          "missing_pct": 9.5e-05
+        },
+        {
+          "name": "gpu_type_spec",
+          "dtype": "string",
+          "missing": 1034399,
+          "missing_pct": 98.044325
+        },
+        {
+          "name": "group",
+          "dtype": "string",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "workload",
+          "dtype": "string",
+          "missing": 952234,
+          "missing_pct": 90.256409
+        }
+      ],
+      "numeric_profile": {},
+      "duration_profile": {},
+      "categorical_profile": {
+        "gpu_type_spec": {
+          "<NULL>": 1034399,
+          "P100": 7653,
+          "V100M32": 6112,
+          "V100": 5750,
+          "T4": 1099,
+          "MISC": 19
+        },
+        "workload": {
+          "<NULL>": 952234,
+          "bert": 54887,
+          "ctr": 27083,
+          "nmt": 10363,
+          "inception": 5440,
+          "graphlearn": 3754,
+          "resnet": 541,
+          "xlnet": 415,
+          "rl": 249,
+          "vgg": 66
+        }
+      },
+      "sample_rows": [
+        {
+          "inst_id": "c1bdfdda2af739f74be81079cfe176800093c65907b3a93f3e1ca34c309c",
+          "user": "58540f191766",
+          "gpu_type_spec": null,
+          "group": "ba4e3be6472ded359f4b1ca53d9bd53e",
+          "workload": null
+        },
+        {
+          "inst_id": "a8c39faded8b9a5b7436a47aff747835795cec39ef33c79aa656b04c7fc8",
+          "user": "58540f191766",
+          "gpu_type_spec": null,
+          "group": "81b1eed4c4b0463b7e5a154f7c42db1e",
+          "workload": null
+        },
+        {
+          "inst_id": "26bf18df11f3a989fa64ed808dc780ab24a7700941f7c17679eab0db1494",
+          "user": "58540f191766",
+          "gpu_type_spec": null,
+          "group": "046437ed700bdf7434aa88503cc97a8d",
+          "workload": null
+        },
+        {
+          "inst_id": "96e5c5d1dfed5460c211c298a92b3ce68b96290ffb36f9e2e59d0bffbbf8",
+          "user": "e258b04ca581",
+          "gpu_type_spec": null,
+          "group": "4122ad40b4e90b145a3be3832fc3d72b",
+          "workload": null
+        },
+        {
+          "inst_id": "dd6fa8f4704822c969762dec17f57a354bb09ef39f0608e109ab48c2555f",
+          "user": "5b1345f03aa1",
+          "gpu_type_spec": null,
+          "group": "ccf64a5336e78832f763e8bd2c399451",
+          "workload": null
+        }
+      ],
+      "audit_seconds": 4.56
+    },
+    {
+      "table": "pai_machine_spec",
+      "path": "data\\pai_machine_spec\\pai_machine_spec.csv",
+      "file_size_bytes": 73311,
+      "file_size_mb": 0.07,
+      "sha256": "251e9e33649155a6a935fdc1dc0e90cd4698206936b60bd8fce60ff2ccd51439",
+      "checksum_match": true,
+      "rows": 1897,
+      "columns": 5,
+      "chunks": 1,
+      "duplicate_rows_by_full_row_hash": 0,
+      "unique_rows_by_full_row_hash": 1897,
+      "key_cardinality": {
+        "machine": 1897
+      },
+      "key_duplicate_rows": {
+        "machine": 0
+      },
+      "fields": [
+        {
+          "name": "machine",
+          "dtype": "string",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "gpu_type",
+          "dtype": "string",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "cap_cpu",
+          "dtype": "float64",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "cap_mem",
+          "dtype": "float64",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "cap_gpu",
+          "dtype": "float64",
+          "missing": 0,
+          "missing_pct": 0.0
+        }
+      ],
+      "numeric_profile": {
+        "cap_cpu": {
+          "non_null": 1897,
+          "min": 64.0,
+          "max": 96.0,
+          "mean": 82.53874538745387,
+          "negative_values": 0,
+          "zero_values": 0
+        },
+        "cap_mem": {
+          "non_null": 1897,
+          "min": 384.0,
+          "max": 512.0,
+          "mean": 499.85450711649975,
+          "negative_values": 0,
+          "zero_values": 0
+        },
+        "cap_gpu": {
+          "non_null": 1897,
+          "min": 0.0,
+          "max": 8.0,
+          "mean": 3.5540326831839746,
+          "negative_values": 0,
+          "zero_values": 83
+        }
+      },
+      "duration_profile": {},
+      "categorical_profile": {
+        "gpu_type": {
+          "P100": 798,
+          "T4": 497,
+          "MISC": 280,
+          "V100M32": 135,
+          "V100": 104,
+          "CPU": 83
+        }
+      },
+      "sample_rows": [
+        {
+          "machine": "7399a758eb02bae1a3621236",
+          "gpu_type": "CPU",
+          "cap_cpu": 96.0,
+          "cap_mem": 512.0,
+          "cap_gpu": 0.0
+        },
+        {
+          "machine": "75c536d5ba60528b3ef3ae40",
+          "gpu_type": "CPU",
+          "cap_cpu": 96.0,
+          "cap_mem": 512.0,
+          "cap_gpu": 0.0
+        },
+        {
+          "machine": "6265a99de1a50cc6f1b03602",
+          "gpu_type": "CPU",
+          "cap_cpu": 96.0,
+          "cap_mem": 512.0,
+          "cap_gpu": 0.0
+        }
+      ],
+      "audit_seconds": 0.02
+    },
+    {
+      "table": "pai_machine_metric",
+      "path": "data\\pai_machine_metric\\pai_machine_metric.csv",
+      "file_size_bytes": 437366971,
+      "file_size_mb": 417.106,
+      "sha256": "8b6592daab0373ef7fec730198b4df5891b1722c2ab4c7016249166e131402d3",
+      "checksum_match": true,
+      "rows": 2009423,
+      "columns": 12,
+      "chunks": 11,
+      "duplicate_rows_by_full_row_hash": 0,
+      "unique_rows_by_full_row_hash": 2009423,
+      "key_cardinality": {
+        "worker_name": 2009421,
+        "machine": 1720,
+        "worker_name+machine+start_time+end_time": 2009421
+      },
+      "key_duplicate_rows": {
+        "worker_name": 2,
+        "machine": 2007703,
+        "worker_name+machine+start_time+end_time": 2
+      },
+      "fields": [
+        {
+          "name": "worker_name",
+          "dtype": "string",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "machine",
+          "dtype": "string",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "start_time",
+          "dtype": "float64",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "end_time",
+          "dtype": "float64",
+          "missing": 0,
+          "missing_pct": 0.0
+        },
+        {
+          "name": "machine_cpu_iowait",
+          "dtype": "float64",
+          "missing": 1090518,
+          "missing_pct": 54.270206
+        },
+        {
+          "name": "machine_cpu_kernel",
+          "dtype": "float64",
+          "missing": 280688,
+          "missing_pct": 13.968587
+        },
+        {
+          "name": "machine_cpu_usr",
+          "dtype": "float64",
+          "missing": 232095,
+          "missing_pct": 11.550331
+        },
+        {
+          "name": "machine_gpu",
+          "dtype": "float64",
+          "missing": 241494,
+          "missing_pct": 12.018077
+        },
+        {
+          "name": "machine_load_1",
+          "dtype": "float64",
+          "missing": 268544,
+          "missing_pct": 13.364234
+        },
+        {
+          "name": "machine_net_receive",
+          "dtype": "float64",
+          "missing": 218148,
+          "missing_pct": 10.856251
+        },
+        {
+          "name": "machine_num_worker",
+          "dtype": "float64",
+          "missing": 295258,
+          "missing_pct": 14.693671
+        },
+        {
+          "name": "machine_cpu",
+          "dtype": "float64",
+          "missing": 1125895,
+          "missing_pct": 56.030761
+        }
+      ],
+      "numeric_profile": {
+        "start_time": {
+          "non_null": 2009423,
+          "min": 1589093.0,
+          "max": 6451090.0,
+          "mean": 4360317.540744283,
+          "negative_values": 0,
+          "zero_values": 0
+        },
+        "end_time": {
+          "non_null": 2009423,
+          "min": 2081404.0,
+          "max": 6451192.0,
+          "mean": 4366967.533201322,
+          "negative_values": 0,
+          "zero_values": 0
+        },
+        "machine_cpu_iowait": {
+          "non_null": 918905,
+          "min": 3.821817261452797e-05,
+          "max": 0.338693668290182,
+          "mean": 0.004485891318971699,
+          "negative_values": 0,
+          "zero_values": 0
+        },
+        "machine_cpu_kernel": {
+          "non_null": 1728735,
+          "min": 0.3432331658291457,
+          "max": 81.81678749377178,
+          "mean": 9.508965179746541,
+          "negative_values": 0,
+          "zero_values": 0
+        },
+        "machine_cpu_usr": {
+          "non_null": 1777328,
+          "min": 0.3180713570355533,
+          "max": 94.95882454095016,
+          "mean": 29.684481326601198,
+          "negative_values": 0,
+          "zero_values": 0
+        },
+        "machine_gpu": {
+          "non_null": 1767929,
+          "min": 0.0,
+          "max": 787.4126642257163,
+          "mean": 135.10286089986616,
+          "negative_values": 0,
+          "zero_values": 1018
+        },
+        "machine_load_1": {
+          "non_null": 1740879,
+          "min": 0.5274177088544272,
+          "max": 3073.249944895886,
+          "mean": 84.01768229735467,
+          "negative_values": 0,
+          "zero_values": 0
+        },
+        "machine_net_receive": {
+          "non_null": 1791275,
+          "min": 2286787.0147058824,
+          "max": 4314783303.038172,
+          "mean": 441269624.2689333,
+          "negative_values": 0,
+          "zero_values": 0
+        },
+        "machine_num_worker": {
+          "non_null": 1714165,
+          "min": 0.0,
+          "max": 29.749748490945677,
+          "mean": 11.788630172883368,
+          "negative_values": 0,
+          "zero_values": 7
+        },
+        "machine_cpu": {
+          "non_null": 883528,
+          "min": 0.7210128105123754,
+          "max": 99.27234890886216,
+          "mean": 27.609000623374595,
+          "negative_values": 0,
+          "zero_values": 0
+        }
+      },
+      "duration_profile": {
+        "start_time->end_time": {
+          "valid_pairs": 2009423,
+          "negative_durations": 0,
+          "zero_durations": 1360,
+          "min": 0.0,
+          "max": 626371.0,
+          "mean": 6649.992457038662
+        }
+      },
+      "categorical_profile": {},
+      "sample_rows": [
+        {
+          "worker_name": "8fa54171acbc9f16704c03f137ac053ede9a97432cfc94e7d1d6893d9b5a",
+          "machine": "5248e29b2b7f2b5f8b974608",
+          "start_time": 2134401.0,
+          "end_time": 2134599.0,
+          "machine_cpu_iowait": null,
+          "machine_cpu_kernel": null,
+          "machine_cpu_usr": null,
+          "machine_gpu": null,
+          "machine_load_1": null,
+          "machine_net_receive": null,
+          "machine_num_worker": null,
+          "machine_cpu": null
+        },
+        {
+          "worker_name": "9b69319eb5d19b4ea2514fcb4d761c3d00be925b65f52964197052de6c1e",
+          "machine": "5248e29b2b7f2b5f8b974608",
+          "start_time": 2806218.0,
+          "end_time": 2806331.0,
+          "machine_cpu_iowait": 0.006080450935178068,
+          "machine_cpu_kernel": 9.226263885334015,
+          "machine_cpu_usr": 40.15892692307693,
+          "machine_gpu": 192.55108834827143,
+          "machine_load_1": 89.73127319323423,
+          "machine_net_receive": 384588331.19712895,
+          "machine_num_worker": 15.672815782731233,
+          "machine_cpu": 49.391271259346134
+        },
+        {
+          "worker_name": "b37cd5d848323f23352464f71d3c27ef4796532ee09d5964b173744a908a",
+          "machine": "5248e29b2b7f2b5f8b974608",
+          "start_time": 3084090.0,
+          "end_time": 3084411.0,
+          "machine_cpu_iowait": 0.0006989974937343358,
+          "machine_cpu_kernel": 10.140852992737287,
+          "machine_cpu_usr": 40.80752178267401,
+          "machine_gpu": 150.49724172517548,
+          "machine_load_1": 72.37721412471826,
+          "machine_net_receive": 702799379.1635362,
+          "machine_num_worker": 14.234468937875752,
+          "machine_cpu": 50.94907377290504
+        },
+        {
+          "worker_name": "2d22f13ac53f95a475df1d0792981cdb6737ef6d34e27bf2b6dfa736aa1f",
+          "machine": "1465a37f156f80e0687d8fff",
+          "start_time": 6061026.0,
+          "end_time": 6068662.0,
+          "machine_cpu_iowait": null,
+          "machine_cpu_kernel": null,
+          "machine_cpu_usr": 47.83386981850773,
+          "machine_gpu": 122.5915619389587,
+          "machine_load_1": 85.51305881032549,
+          "machine_net_receive": 701428347.6308107,
+          "machine_num_worker": 22.93536804308797,
+          "machine_cpu": null
+        },
+        {
+          "worker_name": "802e82a1ef14fce6cd396ac05e4388a98f7c21a5517f6badc153c3e1ee97",
+          "machine": "1465a37f156f80e0687d8fff",
+          "start_time": 6235190.0,
+          "end_time": 6242889.0,
+          "machine_cpu_iowait": null,
+          "machine_cpu_kernel": null,
+          "machine_cpu_usr": 48.317726947179935,
+          "machine_gpu": 157.91061827956992,
+          "machine_load_1": 166.36907930107532,
+          "machine_net_receive": 824803810.5263157,
+          "machine_num_worker": 20.41894312583968,
+          "machine_cpu": null
+        }
+      ],
+      "audit_seconds": 8.89
+    }
+  ]
+}

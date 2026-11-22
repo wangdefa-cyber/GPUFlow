@@ -1,0 +1,159 @@
+{
+  "method": "Non-null key columns are hashed in chunks and compared by unique 64-bit hashes. Collisions are theoretically possible but negligible.",
+  "relationships": [
+    {
+      "left": "job.job_name",
+      "right": "task.job_name",
+      "left_unique_non_null": 1055501,
+      "right_unique_non_null": 1055501,
+      "matched": 1055501,
+      "left_only": 0,
+      "right_only": 0,
+      "left_coverage_pct": 100.0,
+      "right_coverage_pct": 100.0
+    },
+    {
+      "left": "job.job_name",
+      "right": "instance.job_name",
+      "left_unique_non_null": 1055501,
+      "right_unique_non_null": 1055432,
+      "matched": 1055432,
+      "left_only": 69,
+      "right_only": 0,
+      "left_coverage_pct": 99.9935,
+      "right_coverage_pct": 100.0
+    },
+    {
+      "left": "job.job_name",
+      "right": "sensor.job_name",
+      "left_unique_non_null": 1055501,
+      "right_unique_non_null": 838678,
+      "matched": 837529,
+      "left_only": 217972,
+      "right_only": 1149,
+      "left_coverage_pct": 79.349,
+      "right_coverage_pct": 99.863
+    },
+    {
+      "left": "job.inst_id",
+      "right": "group.inst_id",
+      "left_unique_non_null": 1055501,
+      "right_unique_non_null": 1055032,
+      "matched": 1053971,
+      "left_only": 1530,
+      "right_only": 1061,
+      "left_coverage_pct": 99.855,
+      "right_coverage_pct": 99.8994
+    },
+    {
+      "left": "job.inst_id",
+      "right": "instance.inst_id",
+      "left_unique_non_null": 1055501,
+      "right_unique_non_null": 1055432,
+      "matched": 1055432,
+      "left_only": 69,
+      "right_only": 0,
+      "left_coverage_pct": 99.9935,
+      "right_coverage_pct": 100.0
+    },
+    {
+      "left": "job.inst_id",
+      "right": "sensor.inst_id",
+      "left_unique_non_null": 1055501,
+      "right_unique_non_null": 838678,
+      "matched": 837529,
+      "left_only": 217972,
+      "right_only": 1149,
+      "left_coverage_pct": 79.349,
+      "right_coverage_pct": 99.863
+    },
+    {
+      "left": "task.job+task",
+      "right": "instance.job+task",
+      "left_unique_non_null": 1261050,
+      "right_unique_non_null": 1260920,
+      "matched": 1260920,
+      "left_only": 130,
+      "right_only": 0,
+      "left_coverage_pct": 99.9897,
+      "right_coverage_pct": 100.0
+    },
+    {
+      "left": "task.job+task",
+      "right": "sensor.job+task",
+      "left_unique_non_null": 1261050,
+      "right_unique_non_null": 851812,
+      "matched": 850252,
+      "left_only": 410798,
+      "right_only": 1560,
+      "left_coverage_pct": 67.4241,
+      "right_coverage_pct": 99.8169
+    },
+    {
+      "left": "instance.worker_name",
+      "right": "sensor.worker_name",
+      "left_unique_non_null": 7164358,
+      "right_unique_non_null": 3033232,
+      "matched": 3019349,
+      "left_only": 4145009,
+      "right_only": 13883,
+      "left_coverage_pct": 42.144,
+      "right_coverage_pct": 99.5423
+    },
+    {
+      "left": "instance.worker_name",
+      "right": "metric.worker_name",
+      "left_unique_non_null": 7164358,
+      "right_unique_non_null": 2009421,
+      "matched": 2009421,
+      "left_only": 5154937,
+      "right_only": 0,
+      "left_coverage_pct": 28.0475,
+      "right_coverage_pct": 100.0
+    },
+    {
+      "left": "instance.machine",
+      "right": "sensor.machine",
+      "left_unique_non_null": 1897,
+      "right_unique_non_null": 1737,
+      "matched": 1731,
+      "left_only": 166,
+      "right_only": 6,
+      "left_coverage_pct": 91.2493,
+      "right_coverage_pct": 99.6546
+    },
+    {
+      "left": "instance.machine",
+      "right": "metric.machine",
+      "left_unique_non_null": 1897,
+      "right_unique_non_null": 1720,
+      "matched": 1720,
+      "left_only": 177,
+      "right_only": 0,
+      "left_coverage_pct": 90.6695,
+      "right_coverage_pct": 100.0
+    },
+    {
+      "left": "spec.machine",
+      "right": "instance.machine",
+      "left_unique_non_null": 1897,
+      "right_unique_non_null": 1897,
+      "matched": 1897,
+      "left_only": 0,
+      "right_only": 0,
+      "left_coverage_pct": 100.0,
+      "right_coverage_pct": 100.0
+    },
+    {
+      "left": "spec.machine",
+      "right": "metric.machine",
+      "left_unique_non_null": 1897,
+      "right_unique_non_null": 1720,
+      "matched": 1720,
+      "left_only": 177,
+      "right_only": 0,
+      "left_coverage_pct": 90.6695,
+      "right_coverage_pct": 100.0
+    }
+  ]
+}
