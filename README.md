@@ -6,6 +6,16 @@ GPUFlow v1.0 是一个基于阿里巴巴公开 `cluster-trace-gpu-v2020` GPU 集
 
 ## 快速启动
 
+双击项目根目录的：
+
+```text
+start_gpuflow.bat
+```
+
+脚本会自动激活 `gpu_analysis` 环境并启动 GPUFlow。
+
+也可以在 PowerShell 中手动启动：
+
 ```powershell
 conda activate gpu_analysis
 cd C:\Users\Auraro\Desktop\信息系统与设计

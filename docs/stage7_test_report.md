@@ -179,7 +179,17 @@ streamlit run streamlit_app.py --server.headless=true --server.address=127.0.0.1
 - 页面无 `exception`
 - 服务端日志无 traceback
 
-## 7. 已知问题
+## 7. 一键启动验证
+
+执行 `start_gpuflow.bat` 的无界面测试模式后：
+
+- Conda 环境激活成功。
+- Python 依赖检查成功。
+- Streamlit 健康检查返回 `ok`。
+- 服务日志无 traceback。
+- 测试结束后服务进程已停止。
+
+## 8. 已知问题
 
 ### 7.1 Windows AppTest 临时目录清理提示
 
@@ -199,7 +209,7 @@ pytest 退出时可能打印临时目录清理权限提示，但：
 
 当前导入为文件前部有界终止实例，不足以代表完整两个月集群。界面和文档均标注样本边界。
 
-## 8. 发布结论
+## 9. 发布结论
 
 所有 P0/P1 功能具备可运行闭环：
 

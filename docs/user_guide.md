@@ -6,6 +6,21 @@
 
 ## 1. 启动系统
 
+最简单的方式是双击项目根目录中的：
+
+```text
+start_gpuflow.bat
+```
+
+启动器会自动：
+
+1. 切换到项目目录。
+2. 激活 `gpu_analysis` Conda 环境。
+3. 检查 Streamlit、Pandas、SQLAlchemy 和 Plotly。
+4. 启动 Streamlit 并打开浏览器。
+
+也可以手动启动：
+
 ```powershell
 conda activate gpu_analysis
 cd C:\Users\Auraro\Desktop\信息系统与设计

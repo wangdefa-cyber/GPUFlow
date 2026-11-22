@@ -93,6 +93,7 @@ live_steps 11
 
 ### 应用与代码
 
+- `start_gpuflow.bat`
 - `streamlit_app.py`
 - `app_pages/`
 - `src/gpu_sim/`
