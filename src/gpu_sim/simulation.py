@@ -24,6 +24,19 @@ from gpu_sim.scheduling import choose_server, order_tasks
 
 
 @dataclass(frozen=True)
+class EngineStep:
+    simulation_time: float
+    finished: bool
+    waiting_count: int
+    running_count: int
+    completed_count: int
+    blocked_count: int
+    gpu_allocated: float
+    cpu_allocated: float
+    memory_allocated_gb: float
+    new_event_count: int
+
+@dataclass(frozen=True)
 class EngineInput:
     run_id: str
     tasks: list[TaskSpec]
@@ -67,7 +80,13 @@ class SimulationEngine:
         self.heap: list[tuple[float, int, int, str, str | None]] = []
         self._heap_order = 0
         self._event_sequence = 0
+        self._initialized = False
+        self._finished = False
+        self._final_result: SimulationResult | None = None
 
+    @property
+    def finished(self) -> bool:
+        return self._finished
     @property
     def total_capacity(self) -> ResourceVector:
         total = ResourceVector()
@@ -293,74 +312,43 @@ class SimulationEngine:
         denominator = len(values) * sum(value**2 for value in values)
         return numerator / denominator if denominator else None
 
-    def run(self) -> SimulationResult:
+    def initialize(self) -> None:
+        if self._initialized:
+            return
         for execution in self.tasks:
             self._push_arrival(self.executions[execution.id])
+        self._initialized = True
 
-        guard = 0
-        while self.heap:
-            guard += 1
-            if guard > 1_000_000:
-                raise RuntimeError("Simulation exceeded the event processing guard")
+    def _counts(self) -> tuple[int, int, int, int]:
+        waiting = sum(
+            1 for execution in self.executions.values() if execution.status == "WAITING"
+        )
+        running = sum(
+            1 for execution in self.executions.values() if execution.status == "RUNNING"
+        )
+        completed = sum(
+            1 for execution in self.executions.values() if execution.status == "COMPLETED"
+        )
+        blocked = sum(
+            1 for execution in self.executions.values() if execution.status == "BLOCKED"
+        )
+        return waiting, running, completed, blocked
 
-            now = self.heap[0][0]
-            same_time: list[tuple[float, int, int, str, str | None]] = []
-            while self.heap and self.heap[0][0] == now:
-                same_time.append(heapq.heappop(self.heap))
-
-            for _, _, _, event_type, task_id in same_time:
-                if task_id is None:
-                    continue
-                execution = self.executions[task_id]
-                if event_type == "COMPLETION":
-                    server_id = execution.server_id
-                    if server_id:
-                        self.allocations[server_id] = (
-                            self.allocations[server_id] - execution.task.demand
-                        )
-                    execution.end_time = now
-                    execution.status = "COMPLETED"
-                    execution.turnaround_time = (
-                        execution.end_time - execution.task.submit_time
-                    )
-                    execution.timed_out = (
-                        execution.wait_time or 0.0
-                    ) > self.input.scheduler.wait_sla_seconds
-                    self._record_event(
-                        now,
-                        "TASK_COMPLETED",
-                        execution,
-                        server_id,
-                        "task completed and resources released",
-                    )
-                elif event_type == "ARRIVAL":
-                    execution.status = "WAITING"
-                    self.waiting.append(task_id)
-                    self._record_event(
-                        now,
-                        "TASK_ARRIVED",
-                        execution,
-                        None,
-                        "task entered the waiting queue",
-                    )
-
-            self._schedule_waiting(now)
-            self._record_sample(now)
-
-            if not self.heap and self.waiting:
-                self._finish_blocked(now)
-                self._record_sample(now)
-                break
-
+    def _finalize(self) -> SimulationResult:
+        if self._final_result is not None:
+            return self._final_result
         completed = [
-            execution for execution in self.executions.values() if execution.end_time is not None
+            execution
+            for execution in self.executions.values()
+            if execution.end_time is not None
         ]
         makespan = None
         if completed:
             start = min(execution.task.submit_time for execution in self.executions.values())
             makespan = max(execution.end_time or 0.0 for execution in completed) - start
-
-        samples = sorted(self.samples_by_time.values(), key=lambda sample: sample.simulation_time)
+        samples = sorted(
+            self.samples_by_time.values(), key=lambda sample: sample.simulation_time
+        )
         metrics = self._metrics(makespan, samples)
         self._record_event(
             samples[-1].simulation_time if samples else 0.0,
@@ -370,19 +358,143 @@ class SimulationEngine:
             "simulation event loop finished",
             {"makespan_seconds": makespan},
         )
-
-        result_hash = self._result_hash()
-        return SimulationResult(
+        self._final_result = SimulationResult(
             run_id=self.input.run_id,
             tasks=list(self.executions.values()),
             events=self.events,
             samples=samples,
             metrics=metrics,
             makespan=makespan,
-            result_hash=result_hash,
+            result_hash=self._result_hash(),
             config=self.input.scheduler,
         )
+        return self._final_result
 
+    def step(self) -> EngineStep:
+        """Advance one event-time batch; safe to call repeatedly from the UI."""
+        if not self._initialized:
+            self.initialize()
+        if self._finished and self._final_result is not None:
+            waiting, running, completed, blocked = self._counts()
+            capacity = self.total_capacity
+            return EngineStep(
+                simulation_time=(
+                    self.samples_by_time and max(self.samples_by_time)
+                ) or 0.0,
+                finished=True,
+                waiting_count=waiting,
+                running_count=running,
+                completed_count=completed,
+                blocked_count=blocked,
+                gpu_allocated=0.0,
+                cpu_allocated=0.0,
+                memory_allocated_gb=0.0,
+                new_event_count=0,
+            )
+
+        event_start = len(self.events)
+        if not self.heap:
+            if self.waiting:
+                now = (
+                    max(self.samples_by_time)
+                    if self.samples_by_time
+                    else min(task.submit_time for task in self.tasks)
+                )
+                self._finish_blocked(now)
+                self._record_sample(now)
+            self._finished = True
+            self._final_result = self._finalize()
+            waiting, running, completed, blocked = self._counts()
+            return EngineStep(
+                simulation_time=(
+                    self.samples_by_time and max(self.samples_by_time)
+                ) or 0.0,
+                finished=True,
+                waiting_count=waiting,
+                running_count=running,
+                completed_count=completed,
+                blocked_count=blocked,
+                gpu_allocated=0.0,
+                cpu_allocated=0.0,
+                memory_allocated_gb=0.0,
+                new_event_count=len(self.events) - event_start,
+            )
+
+        now = self.heap[0][0]
+        same_time: list[tuple[float, int, int, str, str | None]] = []
+        while self.heap and self.heap[0][0] == now:
+            same_time.append(heapq.heappop(self.heap))
+
+        for _, _, _, event_type, task_id in same_time:
+            if task_id is None:
+                continue
+            execution = self.executions[task_id]
+            if event_type == "COMPLETION":
+                server_id = execution.server_id
+                if server_id:
+                    self.allocations[server_id] = (
+                        self.allocations[server_id] - execution.task.demand
+                    )
+                execution.end_time = now
+                execution.status = "COMPLETED"
+                execution.turnaround_time = execution.end_time - execution.task.submit_time
+                execution.timed_out = (
+                    execution.wait_time or 0.0
+                ) > self.input.scheduler.wait_sla_seconds
+                self._record_event(
+                    now,
+                    "TASK_COMPLETED",
+                    execution,
+                    server_id,
+                    "task completed and resources released",
+                )
+            elif event_type == "ARRIVAL":
+                execution.status = "WAITING"
+                self.waiting.append(task_id)
+                self._record_event(
+                    now,
+                    "TASK_ARRIVED",
+                    execution,
+                    None,
+                    "task entered the waiting queue",
+                )
+
+        self._schedule_waiting(now)
+        self._record_sample(now)
+
+        if not self.heap and self.waiting:
+            self._finish_blocked(now)
+            self._record_sample(now)
+
+        if not self.heap and not self.waiting:
+            self._finished = True
+            self._final_result = self._finalize()
+
+        waiting, running, completed, blocked = self._counts()
+        sample = self.samples_by_time[round(now, 9)]
+        return EngineStep(
+            simulation_time=now,
+            finished=self._finished,
+            waiting_count=waiting,
+            running_count=running,
+            completed_count=completed,
+            blocked_count=blocked,
+            gpu_allocated=sample.gpu_allocated,
+            cpu_allocated=sample.cpu_allocated,
+            memory_allocated_gb=sample.memory_allocated_gb,
+            new_event_count=len(self.events) - event_start,
+        )
+
+    def run(self) -> SimulationResult:
+        self.initialize()
+        while not self._finished:
+            self.step()
+        return self.result()
+
+    def result(self) -> SimulationResult:
+        if self._final_result is None:
+            raise RuntimeError("Simulation has not finished")
+        return self._final_result
     def _result_hash(self) -> str:
         payload = {
             "tasks": [task.as_dict() for task in self.tasks],

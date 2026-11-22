@@ -4,7 +4,7 @@ from pathlib import Path
 from shutil import rmtree
 from uuid import uuid4
 
-from gpu_sim.application import execute_simulation
+from gpu_sim.application import execute_simulation, execute_strategy_batch
 from gpu_sim.db import Database
 from gpu_sim.models import SimulationRunRecord
 from gpu_sim.services import (
@@ -65,6 +65,24 @@ def test_database_seed_and_closed_loop() -> None:
             historical, dataset = task_dicts(session, "HISTORICAL_REPLAY")
             assert historical == []
             assert dataset is None
+
+        batch = execute_strategy_batch(
+            database=database,
+            source="USER_CREATED",
+            presets=["FIFO", "SJF", "Priority", "Best Fit"],
+            random_seed=42,
+            wait_sla_seconds=900,
+            allow_skip_head=False,
+            name_prefix="comparison test",
+        )
+        assert len(batch.outcomes) == 4
+        assert {outcome.result.config.preset for outcome in batch.outcomes} == {
+            "FIFO", "SJF", "Priority", "Best Fit"
+        }
+        assert len({outcome.result.result_hash for outcome in batch.outcomes}) == 4
+
+        with database.session_scope() as session:
+            assert database_counts(session)["runs"] == 5
     finally:
         database.dispose()
         rmtree(case_dir, ignore_errors=True)

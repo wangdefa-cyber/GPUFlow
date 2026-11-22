@@ -6,6 +6,7 @@ import streamlit as st
 
 from gpu_sim.application import execute_simulation
 from gpu_sim.db import get_database
+from gpu_sim.prototype.live import render_live_controls
 from gpu_sim.prototype.ui import page_caption, section_header, source_badge
 from gpu_sim.services import (
     database_counts,
@@ -53,6 +54,8 @@ if counts["historical_tasks"]:
 if not source_options:
     st.warning("当前没有可运行任务，请先在任务管理中创建任务或从数据中心导入历史样本。", icon=":material/warning:")
     st.stop()
+
+render_live_controls(database)
 
 with st.form("run_simulation_form"):
     run_name = st.text_input("实验名称", value=f"调度实验 {counts['runs'] + 1}", key="run_name")

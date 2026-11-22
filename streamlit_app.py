@@ -80,7 +80,7 @@ page = st.navigation(
                 "app_pages/comparison.py",
                 title="策略对比",
                 icon=":material/compare_arrows:",
-                help="展示多策略比较的指标口径和兼容性要求；实验数据将在阶段 5 接入。",
+                help="批量运行并比较四种调度策略，查看指标、GPU 利用率曲线和完成时间分布。",
             ),
         ],
         "智能决策": [

@@ -149,3 +149,26 @@ def test_simulation_is_reproducible() -> None:
     assert [(e.event_time, e.event_type) for e in first.events] == [
         (e.event_time, e.event_type) for e in second.events
     ]
+
+
+def test_step_by_step_matches_batch_run() -> None:
+    tasks = [task("t1", duration=5), task("t2", submit=2, duration=3)]
+    servers = [server("s1", "A")]
+    config = scheduler()
+    batch_result = SimulationEngine(
+        EngineInput(run_id="batch", tasks=tasks, servers=servers, scheduler=config)
+    ).run()
+
+    stepped = SimulationEngine(
+        EngineInput(run_id="stepped", tasks=tasks, servers=servers, scheduler=config)
+    )
+    stepped.initialize()
+    step_count = 0
+    while not stepped.finished:
+        stepped.step()
+        step_count += 1
+    stepped_result = stepped.result()
+
+    assert step_count > 1
+    assert stepped_result.result_hash == batch_result.result_hash
+    assert stepped_result.metrics == batch_result.metrics
