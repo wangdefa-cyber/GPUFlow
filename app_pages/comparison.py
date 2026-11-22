@@ -1,14 +1,12 @@
 from __future__ import annotations
 
-import hashlib
-import json
-
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 
 from gpu_sim.application import execute_strategy_batch
+from gpu_sim.compatibility import run_compatibility_key
 from gpu_sim.db import get_database
 from gpu_sim.prototype.ui import page_caption, section_header, source_badge
 from gpu_sim.services import (
@@ -31,18 +29,6 @@ METRIC_DEFS = {
     "timeout_rate": ("超时率", "%", 100.0),
     "fairness_index": ("公平性指数", "", 1.0),
 }
-
-
-def _compatibility_key(run) -> str:
-    payload = {
-        "tasks": run.task_snapshot_json,
-        "servers": run.server_snapshot_json,
-        "seed": run.random_seed,
-        "sla": run.wait_sla_seconds,
-        "skip": run.allow_skip_head,
-    }
-    encoded = json.dumps(payload, sort_keys=True, ensure_ascii=False).encode("utf-8")
-    return hashlib.sha256(encoded).hexdigest()
 
 
 def _format_metric(value, multiplier: float, digits: int = 2) -> str:
@@ -145,14 +131,14 @@ with database.session_scope() as session:
     run_tasks = {run.id: run_task_rows(session, run.id) for run in selected_runs}
     run_samples = {run.id: run_sample_rows(session, run.id) for run in selected_runs}
 
-keys = {_compatibility_key(run) for run in selected_runs}
+keys = {run_compatibility_key(run) for run in selected_runs}
 if len(keys) != 1:
     st.error("所选实验输入不一致，不能直接比较。请选择同一批次或相同任务、集群、种子和 SLA 的实验。", icon=":material/error:")
     compatibility = pd.DataFrame(
         [
             {
                 "实验": run.name,
-                "任务集合键": _compatibility_key(run)[:12],
+                "任务集合键": run_compatibility_key(run)[:12],
                 "预设": run.scheduler_preset,
                 "种子": run.random_seed,
             }

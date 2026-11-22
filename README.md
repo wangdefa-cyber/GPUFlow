@@ -2,7 +2,7 @@
 
 GPUFlow 基于阿里巴巴公开 `cluster-trace-gpu-v2020` GPU 集群追踪数据，目标是在后续阶段实现真实数据导入、虚拟 GPU 集群管理、任务调度、离散事件仿真、动态可视化、策略评价和 AI 辅助决策。
 
-当前进度：**阶段 0–5 已完成，等待确认后进入阶段 6（AI 辅助决策）。**
+当前进度：**阶段 0–6 已完成，进入阶段 7（系统测试与最终交付）。**
 
 ## 阶段 0：环境与项目审计
 
@@ -73,6 +73,14 @@ streamlit run streamlit_app.py
 - 四策略同条件批量实验
 - 多策略指标表、柱状图、GPU 利用率曲线和完成时间分布
 - 输入兼容性和结果哈希校验
+## 阶段 6：AI 辅助决策
+
+- `docs/stage6_ai_advisory.md`：规则目录、证据结构和用户确认边界
+- `docs/stage6_acceptance_report.md`：阶段验收
+- `src/gpu_sim/advisor.py`：纯规则引擎
+- `src/gpu_sim/advisor_service.py`：建议生成、持久化和采用
+- AI 决策页支持证据表、配置补丁和调度预设采用
+- 容量类建议只展示候选补丁，不自动修改资源配置
 ## 环境
 
 ```powershell
@@ -94,7 +102,7 @@ conda run -n gpu_analysis python scripts\audit_quality.py
 
 ## 当前边界
 
-- Web 原型、SQLite、调度算法、最小闭环、实时步进和策略批量对比已实现；AI 规则仍待阶段 6。
+- Web 原型、SQLite、调度算法、最小闭环、实时步进、策略批量对比和规则化 AI 建议均已实现。
 - 历史数据中的缺失值、状态差异、部分采样和指标口径已记录，不得无提示删除或伪造。
 - 真实历史数据、系统配置数据和仿真生成数据必须保持可区分。
 - 原始 CSV/TAR 不纳入 Git。

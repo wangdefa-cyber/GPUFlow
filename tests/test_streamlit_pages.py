@@ -7,6 +7,7 @@ from uuid import uuid4
 
 from streamlit.testing.v1 import AppTest
 
+from gpu_sim.advisor_service import generate_recommendations
 from gpu_sim.application import execute_strategy_batch
 from gpu_sim.db import get_database, reset_default_database_connection
 from gpu_sim.services import initialize_database
@@ -44,6 +45,7 @@ def test_all_pages_render_with_real_simulation() -> None:
             name_prefix="page smoke batch",
         )
         assert len(batch.outcomes) == 4
+        generate_recommendations(database, batch.outcomes[0].run_id)
 
         at = AppTest.from_file(str(ROOT / "streamlit_app.py"), default_timeout=60)
         at.session_state["comparison_run_ids"] = [

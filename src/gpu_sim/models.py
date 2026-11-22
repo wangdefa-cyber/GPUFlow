@@ -174,3 +174,19 @@ class AppSettingRecord(Base):
 
     key: Mapped[str] = mapped_column(String(128), primary_key=True)
     value: Mapped[str] = mapped_column(Text, nullable=False)
+
+
+class RecommendationRecord(Base):
+    __tablename__ = "recommendation"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    run_id: Mapped[str] = mapped_column(ForeignKey("simulation_run.id"), nullable=False, index=True)
+    recommendation_type: Mapped[str] = mapped_column(String(64), nullable=False)
+    severity: Mapped[str] = mapped_column(String(32), nullable=False)
+    summary: Mapped[str] = mapped_column(Text, nullable=False)
+    reasoning: Mapped[str] = mapped_column(Text, nullable=False)
+    evidence_json: Mapped[list[dict[str, Any]]] = mapped_column(JSON, default=list, nullable=False)
+    suggested_patch_json: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict, nullable=False)
+    rule_version: Mapped[str] = mapped_column(String(32), default="advisor-rules-v1", nullable=False)
+    accepted: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
